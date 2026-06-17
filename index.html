@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Family Cookbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F8F4ED;
+    --sand: #EDE7D9;
+    --terracotta: #C4622D;
+    --terracotta-light: #F0D9CC;
+    --olive: #5C6B3A;
+    --olive-light: #D6DEAD;
+    --ink: #1E1A14;
+    --muted: #7A7162;
+    --border: #D4CABC;
+    --white: #FFFFFF;
+  }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 4rem 2rem 3.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(196,98,45,0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(92,107,58,0.12) 0%, transparent 40%);
+  }
+
+  .header-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 1.25rem;
+    position: relative;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 6vw, 4.5rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--cream);
+    position: relative;
+  }
+
+  header h1 em {
+    font-style: italic;
+    color: #D4A574;
+  }
+
+  .header-sub {
+    margin-top: 1.25rem;
+    font-size: 0.95rem;
+    color: rgba(248,244,237,0.55);
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    position: relative;
+  }
+
+  .header-rule {
+    width: 48px;
+    height: 1px;
+    background: var(--terracotta);
+    margin: 1.5rem auto 0;
+    position: relative;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--sand);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-inner::-webkit-scrollbar { display: none; }
+
+  .nav-btn {
+    background: none;
+    border: none;
+    padding: 1rem 1.25rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .nav-btn:hover { color: var(--ink); }
+  .nav-btn.active { color: var(--terracotta); border-bottom-color: var(--terracotta); font-weight: 500; }
+
+  /* ── LAYOUT ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  .section-count {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── RECIPE GRID ── */
+  .recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 3.5rem;
+  }
+
+  /* ── RECIPE CARD ── */
+  .recipe-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: transform 0.18s, box-shadow 0.18s;
+    overflow: hidden;
+  }
+
+  .recipe-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(30,26,20,0.1);
+  }
+
+  .card-tag {
+    display: block;
+    padding: 0.6rem 1rem 0;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+  }
+
+  .card-body {
+    padding: 0.5rem 1rem 1.1rem;
+  }
+
+  .card-body h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 0.4rem;
+  }
+
+  .card-body p {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.55;
+    margin-bottom: 0.85rem;
+  }
+
+  .card-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  .card-meta span::before {
+    content: '·';
+    margin-right: 0.4rem;
+  }
+
+  .card-meta span:first-child::before { content: ''; margin-right: 0; }
+
+  /* ── MODAL OVERLAY ── */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(30,26,20,0.6);
+    z-index: 200;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem;
+    overflow-y: auto;
+  }
+
+  .overlay.open { display: flex; }
+
+  .modal {
+    background: var(--white);
+    border-radius: 2px;
+    width: 100%;
+    max-width: 620px;
+    position: relative;
+    margin: auto;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    color: var(--muted);
+    cursor: pointer;
+    line-height: 1;
+    padding: 0.25rem;
+  }
+
+  .modal-tag {
+    padding: 1.5rem 1.75rem 0;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.75rem;
+    font-weight: 400;
+    padding: 0.4rem 1.75rem 0;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .modal-desc {
+    padding: 0.75rem 1.75rem 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .modal-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1.25rem 1.75rem;
+  }
+
+  .modal-meta {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0 1.75rem;
+    flex-wrap: wrap;
+  }
+
+  .modal-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .modal-meta-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .modal-meta-value {
+    font-size: 0.9rem;
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  .modal-section {
+    padding: 1.25rem 1.75rem 0;
+  }
+
+  .modal-section h4 {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--olive);
+    margin-bottom: 0.75rem;
+  }
+
+  .ingredients-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.3rem 1.5rem;
+  }
+
+  .ingredients-list li {
+    font-size: 0.88rem;
+    color: var(--ink);
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--sand);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .ingredients-list li span {
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+
+  .steps-list {
+    list-style: none;
+    counter-reset: steps;
+  }
+
+  .steps-list li {
+    counter-increment: steps;
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: var(--ink);
+    line-height: 1.65;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--sand);
+  }
+
+  .steps-list li:last-child { border-bottom: none; }
+
+  .steps-list li::before {
+    content: counter(steps);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--terracotta);
+    min-width: 1.25rem;
+    padding-top: 0.05rem;
+    line-height: 1.5;
+  }
+
+  .modal-note {
+    margin: 1.25rem 1.75rem 1.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--terracotta-light);
+    border-left: 3px solid var(--terracotta);
+    font-size: 0.82rem;
+    color: var(--ink);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-section {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--muted);
+    font-size: 0.88rem;
+    border: 1px dashed var(--border);
+    margin-bottom: 3.5rem;
+  }
+
+  .empty-section p:first-child {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="header-eyebrow">A collection of family recipes</p>
+  <h1>Our Family <em>Cookbook</em></h1>
+  <p class="header-sub">Made with love &amp; memory</p>
+  <div class="header-rule"></div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showSection('all')">All</button>
+    <button class="nav-btn" onclick="showSection('starters')">Starters</button>
+    <button class="nav-btn" onclick="showSection('mains')">Mains</button>
+    <button class="nav-btn" onclick="showSection('sides')">Sides</button>
+    <button class="nav-btn" onclick="showSection('soups')">Soups</button>
+    <button class="nav-btn" onclick="showSection('desserts')">Desserts</button>
+    <button class="nav-btn" onclick="showSection('drinks')">Drinks</button>
+  </div>
+</nav>
+
+<main>
+  <!-- STARTERS -->
+  <div class="recipe-section" data-category="starters">
+    <div class="section-header">
+      <h2>Starters</h2>
+      <span class="section-count">2 recipes</span>
+    </div>
+    <div class="recipe-grid">
+
+      <div class="recipe-card" onclick="openRecipe('brik')">
+        <span class="card-tag">Starter · Tunisian</span>
+        <div class="card-body">
+          <h3>Brik à l'Oeuf</h3>
+          <p>Crispy fried pastry parcels filled with egg, tuna, capers, and fresh herbs — the ultimate Tunisian street food.</p>
+          <div class="card-meta">
+            <span>30 min</span>
+            <span>Serves 4</span>
+            <span>Medium</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="recipe-card" onclick="openRecipe('mechouia')">
+        <span class="card-tag">Starter · Tunisian</span>
+        <div class="card-body">
+          <h3>Salade Mechouia</h3>
+          <p>Charred peppers, tomatoes, and garlic blended with olive oil and topped with preserved tuna and hard-boiled eggs.</p>
+          <div class="card-meta">
+            <span>45 min</span>
+            <span>Serves 6</span>
+            <span>Easy</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MAINS -->
+  <div class="recipe-section" data-category="mains">
+    <div class="section-header">
+      <h2>Mains</h2>
+      <span class="section-count">3 recipes</span>
+    </div>
+    <div class="recipe-grid">
+
+      <div class="recipe-card" onclick="openRecipe('couscous')">
+        <span class="card-tag">Main · Tunisian</span>
+        <div class="card-body">
+          <h3>Couscous au Poulet</h3>
+          <p>The centrepiece of every family gathering — slow-braised chicken with chickpeas and seven vegetables over fluffy couscous.</p>
+          <div class="card-meta">
+            <span>2 hrs</span>
+            <span>Serves 8</span>
+            <span>Medium</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="recipe-card" onclick="openRecipe('chkambou')">
+        <span class="card-tag">Main · Tunisian</span>
+        <div class="card-body">
+          <h3>Ojja aux Merguez</h3>
+          <p>Spiced tomato and pepper sauce with merguez sausage and poached eggs — a hearty weekend brunch staple.</p>
+          <div class="card-meta">
+            <span>40 min</span>
+            <span>Serves 4</span>
+            <span>Easy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="recipe-card" onclick="openRecipe('poulet')">
+        <span class="card-tag">Main · French</span>
+        <div class="card-body">
+          <h3>Poulet Rôti aux Herbes</h3>
+          <p>Simple roast chicken perfumed with thyme, rosemary, lemon, and garlic — a Sunday classic that never fails.</p>
+          <div class="card-meta">
+            <span>1 hr 20 min</span>
+            <span>Serves 4</span>
+            <span>Easy</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SIDES -->
+  <div class="recipe-section" data-category="sides">
+    <div class="section-header">
+      <h2>Sides</h2>
+      <span class="section-count">0 recipes</span>
+    </div>
+    <div class="empty-section">
+      <p>Nothing here yet</p>
+      <p>Add your family's favourite side dishes to this section.</p>
+    </div>
+  </div>
+
+  <!-- SOUPS -->
+  <div class="recipe-section" data-category="soups">
+    <div class="section-header">
+      <h2>Soups</h2>
+      <span class="section-count">1 recipe</span>
+    </div>
+    <div class="recipe-grid">
+
+      <div class="recipe-card" onclick="openRecipe('lablabi')">
+        <span class="card-tag">Soup · Tunisian</span>
+        <div class="card-body">
+          <h3>Lablabi</h3>
+          <p>A warming street-food soup of chickpeas in cumin-spiced broth poured over torn stale bread and topped with egg, tuna, and harissa.</p>
+          <div class="card-meta">
+            <span>25 min</span>
+            <span>Serves 4</span>
+            <span>Easy</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DESSERTS -->
+  <div class="recipe-section" data-category="desserts">
+    <div class="section-header">
+      <h2>Desserts</h2>
+      <span class="section-count">1 recipe</span>
+    </div>
+    <div class="recipe-grid">
+
+      <div class="recipe-card" onclick="openRecipe('makroud')">
+        <span class="card-tag">Dessert · Tunisian</span>
+        <div class="card-body">
+          <h3>Makroud</h3>
+          <p>Semolina pastries stuffed with date paste, fried until golden, then soaked in orange-blossom syrup.</p>
+          <div class="card-meta">
+            <span>1 hr 30 min</span>
+            <span>Makes 24</span>
+            <span>Medium</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DRINKS -->
+  <div class="recipe-section" data-category="drinks">
+    <div class="section-header">
+      <h2>Drinks</h2>
+      <span class="section-count">1 recipe</span>
+    </div>
+    <div class="recipe-grid">
+
+      <div class="recipe-card" onclick="openRecipe('thé')">
+        <span class="card-tag">Drink · Tunisian</span>
+        <div class="card-body">
+          <h3>Thé à la Menthe</h3>
+          <p>Sweet, fragrant mint tea poured from a height — the taste of afternoon, every afternoon.</p>
+          <div class="card-meta">
+            <span>10 min</span>
+            <span>Serves 4</span>
+            <span>Easy</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer>A family recipe collection &nbsp;·&nbsp; Updated with love</footer>
+
+<!-- ── MODAL ── -->
+<div class="overlay" id="overlay" onclick="closeIfBg(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeRecipe()" aria-label="Close">×</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+const recipes = {
+  brik: {
+    tag: 'Starter · Tunisian',
+    title: 'Brik à l\'Oeuf',
+    desc: 'Crispy fried pastry parcels with egg, tuna, capers, and herbs. A beloved Tunisian classic, traditionally eaten during Ramadan but welcome any time.',
+    time: '30 min', serves: '4', difficulty: 'Medium',
+    ingredients: [
+      ['4 sheets', 'brick/filo pastry'],
+      ['4', 'fresh eggs'],
+      ['120g', 'canned tuna (drained)'],
+      ['2 tbsp', 'capers'],
+      ['1 small', 'onion, finely diced'],
+      ['handful', 'flat-leaf parsley, chopped'],
+      ['to taste', 'harissa'],
+      ['as needed', 'neutral oil, for frying'],
+      ['to taste', 'salt & pepper'],
+      ['1', 'lemon, to serve'],
+    ],
+    steps: [
+      'Combine the tuna, capers, onion, and parsley in a bowl. Season well.',
+      'Lay a sheet of pastry flat. Place a spoonful of the filling slightly off-centre, making a shallow well.',
+      'Crack one egg into the well carefully, keeping the yolk intact.',
+      'Fold the pastry over to form a half-moon and press the edges together firmly to seal.',
+      'Heat about 3cm of oil in a wide pan over medium-high heat. Fry each brik 2 minutes per side until deep golden and crisp.',
+      'Drain briefly on paper. Serve immediately with lemon wedges and harissa on the side.',
+    ],
+    note: 'The goal is a still-runny yolk inside a shatteringly crisp shell — timing is everything. Don\'t crowd the pan.',
+  },
+  mechouia: {
+    tag: 'Starter · Tunisian',
+    title: 'Salade Mechouia',
+    desc: 'A smoky, slow-roasted pepper and tomato salad — the flavour of summer afternoons and charcoal smoke.',
+    time: '45 min', serves: '6', difficulty: 'Easy',
+    ingredients: [
+      ['4 large', 'red peppers'],
+      ['3 large', 'ripe tomatoes'],
+      ['1 head', 'garlic, whole'],
+      ['1', 'fresh chilli (optional)'],
+      ['4 tbsp', 'good olive oil'],
+      ['1 tsp', 'caraway seeds, ground'],
+      ['1 tsp', 'cumin, ground'],
+      ['to taste', 'salt'],
+      ['100g', 'canned tuna (to serve)'],
+      ['2', 'hard-boiled eggs (to serve)'],
+    ],
+    steps: [
+      'Char the peppers, tomatoes, whole head of garlic, and chilli directly over a gas flame or under a very hot grill, turning, until blackened all over.',
+      'Place in a bowl, cover with a plate and leave to steam for 15 minutes. Peel off the skins — a few char marks are welcome.',
+      'Roughly chop the peppers and tomatoes. Squeeze out the softened garlic cloves. Combine everything.',
+      'Dress with olive oil, caraway, cumin, and salt. Mix and taste — it should be bold.',
+      'Arrange on a plate and top with flaked tuna, sliced eggs, and a drizzle of olive oil.',
+    ],
+    note: 'This salad is better the next day once the flavours meld. Make it ahead.',
+  },
+  couscous: {
+    tag: 'Main · Tunisian',
+    title: 'Couscous au Poulet',
+    desc: 'The dish that marks every celebration and reunion in our family. Patience is the secret ingredient.',
+    time: '2 hrs', serves: '8', difficulty: 'Medium',
+    ingredients: [
+      ['1 whole', 'chicken, jointed'],
+      ['500g', 'couscous (medium-grain)'],
+      ['2 cans', 'chickpeas, drained'],
+      ['3 large', 'carrots, halved'],
+      ['3', 'courgettes, halved'],
+      ['2', 'turnips, quartered'],
+      ['1 small', 'pumpkin, cubed'],
+      ['2 large', 'onions, sliced'],
+      ['3 tbsp', 'tomato paste'],
+      ['2 tsp', 'ras el hanout'],
+      ['1 tsp', 'turmeric'],
+      ['1 tsp', 'harissa (in the broth)'],
+      ['4 tbsp', 'olive oil'],
+      ['salt', 'to taste'],
+    ],
+    steps: [
+      'Brown the chicken pieces in olive oil in a large pot. Remove and set aside.',
+      'Soften the onions in the same pot. Add tomato paste, ras el hanout, turmeric, harissa, and salt. Stir for 2 minutes.',
+      'Return the chicken. Cover with 1.5 litres of water. Bring to a boil, then simmer 30 minutes.',
+      'Add the harder vegetables (carrots, turnips) and chickpeas. Simmer 20 more minutes.',
+      'Add courgettes and pumpkin. Simmer a final 15–20 minutes until all vegetables are tender.',
+      'Meanwhile, prepare the couscous: pour over boiling salted water (1:1.2 ratio), stir, cover and rest 5 minutes. Fluff with a fork and stir in a knob of butter.',
+      'Mound the couscous on a large platter. Arrange chicken and vegetables over the top. Ladle broth over generously. Serve extra broth on the side.',
+    ],
+    note: 'Serve with a small bowl of harissa stirred into ladle of broth — guests add heat to their own bowl at the table.',
+  },
+  chkambou: {
+    tag: 'Main · Tunisian',
+    title: 'Ojja aux Merguez',
+    desc: 'A stovetop one-pan dinner that comes together in under an hour and tastes like it took all day.',
+    time: '40 min', serves: '4', difficulty: 'Easy',
+    ingredients: [
+      ['8', 'merguez sausages'],
+      ['1 can', 'crushed tomatoes (400g)'],
+      ['2', 'red peppers, sliced'],
+      ['1', 'onion, diced'],
+      ['3 cloves', 'garlic, sliced'],
+      ['1 tsp', 'harissa'],
+      ['1 tsp', 'cumin'],
+      ['1 tsp', 'paprika'],
+      ['4', 'eggs'],
+      ['3 tbsp', 'olive oil'],
+      ['salt', 'to taste'],
+    ],
+    steps: [
+      'Brown the merguez in olive oil in a wide pan. Set aside — they will finish in the sauce.',
+      'In the same pan, soften the onion and peppers over medium heat, about 8 minutes. Add garlic and cook 1 minute more.',
+      'Add harissa, cumin, and paprika. Stir and toast 1 minute.',
+      'Pour in the crushed tomatoes. Season and simmer 15 minutes until the sauce thickens.',
+      'Nestle the merguez back into the sauce. Make four wells with a spoon and crack in the eggs.',
+      'Cover and cook 5–7 minutes until whites are just set but yolks are still runny.',
+      'Serve straight from the pan with crusty bread to mop up the sauce.',
+    ],
+    note: 'Don\'t overcook the eggs — you want the yolks to run into the sauce when you break them.',
+  },
+  poulet: {
+    tag: 'Main · French',
+    title: 'Poulet Rôti aux Herbes',
+    desc: 'A Sunday roast chicken, simple and unfussy. The kind of recipe you don\'t need to look up after the second time.',
+    time: '1 hr 20 min', serves: '4', difficulty: 'Easy',
+    ingredients: [
+      ['1.5 kg', 'whole chicken'],
+      ['1', 'lemon, halved'],
+      ['1 head', 'garlic, halved crosswise'],
+      ['4 sprigs', 'fresh thyme'],
+      ['2 sprigs', 'fresh rosemary'],
+      ['50g', 'butter, softened'],
+      ['3 tbsp', 'olive oil'],
+      ['salt & pepper', 'generously'],
+    ],
+    steps: [
+      'Preheat the oven to 200°C (fan 180°C).',
+      'Mix softened butter with the leaves of one thyme and one rosemary sprig. Season well.',
+      'Loosen the skin over the breast and push the herb butter underneath it directly onto the flesh.',
+      'Stuff the cavity with the lemon halves (squeezed), garlic head, and remaining herb sprigs.',
+      'Rub the outside with olive oil, salt, and pepper.',
+      'Roast breast-side up for 1 hour 20 minutes, basting once at the halfway point.',
+      'Rest uncovered for 15 minutes before carving. Don\'t skip this step.',
+    ],
+    note: 'The garlic cloves soften to a sweet paste inside — squeeze them out and spread on bread alongside the chicken.',
+  },
+  lablabi: {
+    tag: 'Soup · Tunisian',
+    title: 'Lablabi',
+    desc: 'The great Tunisian breakfast soup — restorative, warming, and deeply satisfying at any hour.',
+    time: '25 min', serves: '4', difficulty: 'Easy',
+    ingredients: [
+      ['2 cans', 'chickpeas, drained & rinsed'],
+      ['1 litre', 'good chicken or vegetable stock'],
+      ['6 cloves', 'garlic, minced'],
+      ['2 tsp', 'cumin, ground'],
+      ['1 tsp', 'caraway, ground'],
+      ['2 tbsp', 'harissa'],
+      ['4 tbsp', 'olive oil'],
+      ['4 slices', 'stale crusty bread, torn'],
+      ['4', 'eggs'],
+      ['100g', 'canned tuna (to serve)'],
+      ['salt', 'to taste'],
+    ],
+    steps: [
+      'Warm olive oil in a large pot. Gently cook the garlic until fragrant but not browned, about 2 minutes.',
+      'Add the chickpeas, cumin, caraway, and harissa. Stir to coat.',
+      'Pour in the stock, bring to a simmer, and cook 15 minutes.',
+      'Divide the torn stale bread between deep bowls. Ladle the hot soup generously over the bread — it should soak right through.',
+      'Crack one egg into each bowl (the hot soup will begin to cook it). Top with flaked tuna, extra harissa, and a drizzle of olive oil.',
+    ],
+    note: 'In Tunisia this is eaten at dawn after a long night out. It works equally well at midnight or noon.',
+  },
+  makroud: {
+    tag: 'Dessert · Tunisian',
+    title: 'Makroud',
+    desc: 'Semolina diamonds filled with date paste — fried, not baked — soaked in syrup. The scent of Eid and any occasion worth celebrating.',
+    time: '1 hr 30 min', serves: 'Makes 24', difficulty: 'Medium',
+    ingredients: [
+      ['500g', 'fine semolina'],
+      ['150ml', 'warm water'],
+      ['120ml', 'neutral oil (for dough)'],
+      ['1 tsp', 'salt'],
+      ['400g', 'Medjool dates, pitted'],
+      ['1 tsp', 'cinnamon'],
+      ['1 tsp', 'orange blossom water'],
+      ['oil', 'for frying'],
+      ['300g', 'honey'],
+      ['2 tbsp', 'orange blossom water (for syrup)'],
+    ],
+    steps: [
+      'Make the dough: combine semolina, salt, and oil. Rub together until like wet sand. Gradually add warm water until a firm, pliable dough forms. Rest 30 minutes.',
+      'Make the filling: pulse dates, cinnamon, and orange blossom water in a food processor until a smooth paste. Roll into a long cylinder.',
+      'Roll the dough into a rectangle about 1cm thick. Lay the date cylinder along one edge, roll the dough tightly around it, and seal the seam.',
+      'Cut diagonally into 3cm diamond shapes.',
+      'Deep fry in batches at 170°C until golden all over, about 4–5 minutes. Drain.',
+      'Heat honey with orange blossom water in a wide pan until loose. Dip hot makroud into the syrup for 30 seconds per side.',
+      'Cool on a rack. They firm up and caramelise as they cool.',
+    ],
+    note: 'These keep for a week in an airtight box — if they last that long.',
+  },
+  thé: {
+    tag: 'Drink · Tunisian',
+    title: 'Thé à la Menthe',
+    desc: 'Three rounds: the first bitter as life, the second sweet as love, the third gentle as death. Never rush mint tea.',
+    time: '10 min', serves: '4', difficulty: 'Easy',
+    ingredients: [
+      ['2 tsp', 'Chinese gunpowder green tea'],
+      ['large handful', 'fresh mint (spearmint)'],
+      ['3–4 tbsp', 'sugar (to taste)'],
+      ['700ml', 'boiling water'],
+      ['optional', 'pine nuts, to serve'],
+    ],
+    steps: [
+      'Warm a metal teapot. Add the tea leaves and pour a small amount of boiling water over them. Swirl and immediately discard this first rinse — it removes bitterness.',
+      'Add the fresh mint and sugar to the pot. Pour in the remaining boiling water.',
+      'Steep 3–4 minutes.',
+      'Pour one glass, then return it to the pot. Repeat twice — this blends and aerates the tea.',
+      'Pour into small glasses from a height to create a light foam.',
+      'Serve with pine nuts floating on top if you like.',
+    ],
+    note: 'The pouring height matters — 20–30cm gives the right foam. This is not optional, it is part of the hospitality.',
+  },
+};
+
+function openRecipe(id) {
+  const r = recipes[id];
+  if (!r) return;
+  const ingredientsHtml = r.ingredients.map(([qty, name]) =>
+    `<li><span style="color:var(--ink)">${name}</span><span>${qty}</span></li>`
+  ).join('');
+  const stepsHtml = r.steps.map(s => `<li>${s}</li>`).join('');
+  document.getElementById('modal-content').innerHTML = `
+    <p class="modal-tag">${r.tag}</p>
+    <h2 class="modal-title">${r.title}</h2>
+    <p class="modal-desc">${r.desc}</p>
+    <div class="modal-divider"></div>
+    <div class="modal-meta">
+      <div class="modal-meta-item"><span class="modal-meta-label">Time</span><span class="modal-meta-value">${r.time}</span></div>
+      <div class="modal-meta-item"><span class="modal-meta-label">Serves</span><span class="modal-meta-value">${r.serves}</span></div>
+      <div class="modal-meta-item"><span class="modal-meta-label">Difficulty</span><span class="modal-meta-value">${r.difficulty}</span></div>
+    </div>
+    <div class="modal-section">
+      <h4>Ingredients</h4>
+      <ul class="ingredients-list">${ingredientsHtml}</ul>
+    </div>
+    <div class="modal-section">
+      <h4>Method</h4>
+      <ol class="steps-list">${stepsHtml}</ol>
+    </div>
+    ${r.note ? `<div class="modal-note">${r.note}</div>` : ''}
+  `;
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeRecipe() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeIfBg(e) {
+  if (e.target === document.getElementById('overlay')) closeRecipe();
+}
+
+function showSection(cat) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.querySelectorAll('.recipe-section').forEach(s => {
+    s.style.display = (cat === 'all' || s.dataset.category === cat) ? '' : 'none';
+  });
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRecipe(); });
+</script>
+</body>
+</html>
