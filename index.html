@@ -176,6 +176,29 @@
   footer { text-align: center; padding: 2rem; font-size: 0.75rem; color: var(--muted); border-top: 1px solid var(--border); letter-spacing: 0.05em; }
 
   /* ── PRINT ── */
+  @media (max-width: 760px) {
+    .nav-inner {
+      padding: 0.6rem 1rem;
+    }
+    .nav-controls {
+      width: 100%;
+      margin-inline-start: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+    .search {
+      width: 100%;
+      grid-column: 1 / -1;
+    }
+    .scope-select,
+    .lang-select,
+    .submit-link {
+      width: 100%;
+      min-width: 0;
+    }
+  }
+
   @media print {
     header, nav, footer, main { display: none !important; }
     .overlay { position: static !important; display: block !important; background: none !important; padding: 0 !important; overflow: visible !important; }
