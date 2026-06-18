@@ -152,36 +152,80 @@
 
   footer { text-align: center; padding: 2rem; font-size: 0.75rem; color: var(--muted); border-top: 1px solid var(--border); letter-spacing: 0.05em; }
 
-  /* ── MOBILE ── */
+  /* ── MOBILE: tablets + large phones ── */
   @media (max-width: 760px) {
+    /* Nav */
     .nav-inner { padding: 0.6rem 1rem; gap: 0.5rem; }
     .nav-controls { width: 100%; margin-inline-start: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
     .search { width: 100%; grid-column: 1 / -1; }
     .scope-select, .lang-select { width: 100%; min-width: 0; }
+
+    /* Filter bar */
     .filter-bar { padding: 1rem 1rem 0; gap: 0.6rem 1.25rem; }
+
+    /* Modal: tighter padding, fix ingredients at this breakpoint */
+    .modal-tag { padding: 1.25rem 1.25rem 0; }
+    .modal-title { padding: 0.35rem 1.25rem 0; font-size: 1.45rem; }
+    .modal-desc { padding: 0.6rem 1.25rem 0; }
+    .modal-by { padding: 0.5rem 1.25rem 0; }
+    .modal-badges { padding: 0.75rem 1.25rem 0; }
+    .modal-divider { margin: 1rem 1.25rem; }
+    .modal-meta { padding: 0 1.25rem; }
+    .modal-section { padding: 1rem 1.25rem 0; }
+    .modal-note { margin: 1rem 1.25rem 0; }
+    .modal-actions { padding: 1.25rem 1.25rem 1.75rem; }
+
+    /* Ingredients: always single column on mobile so nothing gets clipped */
+    .ingredients-list { grid-template-columns: 1fr; }
+    /* Allow quantity text to wrap instead of pushing layout off-screen */
+    .ingredients-list li span { white-space: normal; }
   }
 
+  /* ── MOBILE: small phones (bottom-sheet modal) ── */
   @media (max-width: 540px) {
     header { padding: 2.5rem 1.25rem 2rem; }
+
+    /* Filter chips scroll horizontally */
     .filter-group { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 0.25rem; scrollbar-width: none; }
     .filter-group::-webkit-scrollbar { display: none; }
+
     main { padding: 2rem 1rem 4rem; }
     .section-header { margin-bottom: 1.25rem; }
-    .overlay { padding: 0; align-items: flex-end; }
-    .modal { border-radius: 14px 14px 0 0; max-height: 92dvh; overflow-y: auto; margin: 0; width: 100%; }
+
+    /* Bottom-sheet modal — slides up from bottom edge */
+    .overlay { padding: 0; align-items: flex-end; overflow: hidden; }
+    .modal {
+      border-radius: 14px 14px 0 0;
+      max-height: 90vh;
+      max-height: 90dvh;
+      /* Explicit x/y overflow so the base overflow:hidden is fully overridden */
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 0;
+      width: 100%;
+    }
+    /* Clip photo to match rounded top corners of the sheet */
+    .modal-photo { border-radius: 14px 14px 0 0; }
     .modal-close { top: 0.75rem; }
     [dir="rtl"] .modal-close { right: auto; left: 0.75rem; }
-    .modal-tag { padding: 1.25rem 1.1rem 0; }
-    .modal-title { padding: 0.35rem 1.1rem 0; font-size: 1.4rem; }
-    .modal-desc { padding: 0.6rem 1.1rem 0; }
-    .modal-by { padding: 0.5rem 1.1rem 0; }
-    .modal-badges { padding: 0.75rem 1.1rem 0; }
-    .modal-divider { margin: 1rem 1.1rem; }
-    .modal-meta { padding: 0 1.1rem; }
-    .modal-section { padding: 1rem 1.1rem 0; }
-    .modal-note { margin: 1rem 1.1rem 0; }
-    .modal-actions { padding: 1.25rem 1.1rem 2rem; }
-    .ingredients-list { grid-template-columns: 1fr; }
+
+    /* Tighter modal padding on small screens */
+    .modal-tag { padding: 1.25rem 1rem 0; }
+    .modal-title { padding: 0.35rem 1rem 0; font-size: 1.3rem; }
+    .modal-desc { padding: 0.6rem 1rem 0; }
+    .modal-by { padding: 0.5rem 1rem 0; }
+    .modal-badges { padding: 0.75rem 1rem 0; }
+    .modal-divider { margin: 1rem; }
+    .modal-meta { padding: 0 1rem; }
+    .modal-section { padding: 1rem 1rem 0; }
+    .modal-note { margin: 1rem 1rem 0; }
+    /* Extra bottom padding clears iOS home-bar */
+    .modal-actions { padding: 1.25rem 1rem 2.5rem; }
+
+    /* Full-width print button is easier to tap */
+    .print-btn { width: 100%; text-align: center; justify-content: center; }
+
     .submit-cta { padding: 2rem 1rem; }
   }
 
@@ -324,6 +368,7 @@ const recipes = {
     image: '',
     serves: 8,
     kosher: 'meat',
+    passover: true,
     allergens: ['spicy'],
     t: {
       en: {
@@ -538,6 +583,7 @@ const recipes = {
     image: 'clipart',
     serves: 4,
     kosher: 'parve',
+    passover: true,
     allergens: [],
     t: {
       en: {
@@ -673,10 +719,13 @@ const ALLERGEN_LABELS = {
 };
 
 const FILTER_UI = {
-  en:{ kosher:'Kosher', hide:'Hide' }, fr:{ kosher:'Casher', hide:'Masquer' },
-  de:{ kosher:'Koscher', hide:'Ausblenden' }, es:{ kosher:'Kosher', hide:'Ocultar' },
-  ro:{ kosher:'Cușer', hide:'Ascunde' }, he:{ kosher:'כשרות', hide:'הסתר' },
-  ar:{ kosher:'كوشر', hide:'إخفاء' },
+  en:{ kosher:'Kosher', hide:'Hide', passover:'Passover' },
+  fr:{ kosher:'Casher', hide:'Masquer', passover:'Pessah' },
+  de:{ kosher:'Koscher', hide:'Ausblenden', passover:'Pessach' },
+  es:{ kosher:'Kosher', hide:'Ocultar', passover:'Pésaj' },
+  ro:{ kosher:'Cușer', hide:'Ascunde', passover:'Pesah' },
+  he:{ kosher:'כשרות', hide:'הסתר', passover:'פסח' },
+  ar:{ kosher:'كوشر', hide:'إخفاء', passover:'الفصح' },
 };
 
 const ICONS = {
@@ -696,6 +745,7 @@ const CATS = ['mains','sides','desserts'];
 const ORDER = ['en','fr','de','es','ro','he','ar'];
 let lang = 'en', filter = 'all', query = '', currentId = null, searchScope = 'tab';
 let kosherFilter = 'all';
+let pasFilter = false;
 const hidden = new Set();
 
 function ui() { return I18N[lang]; }
@@ -703,6 +753,7 @@ function kosherName(id) { const k = recipes[id].kosher; return KOSHER[k][lang] |
 function allergenLabel(a) { return ALLERGEN_LABELS[a][lang] || ALLERGEN_LABELS[a].en; }
 function passKosher(id) { return kosherFilter === 'all' || recipes[id].kosher === kosherFilter; }
 function passAllergens(id) { return !recipes[id].allergens.some(a => hidden.has(a)); }
+function passPassover(id) { return !pasFilter || recipes[id].passover === true; }
 function badgesHTML(id) {
   const r = recipes[id];
   const pill = `<span class="kosher-pill kosher-${r.kosher}">${esc(kosherName(id))}</span>`;
@@ -794,13 +845,15 @@ function buildFilters() {
   const allergBtns = ALLERGENS.map(a =>
     `<button class="chip allergen ${hidden.has(a)?'active':''}" onclick="toggleAllergen('${a}')"><span class="chip-ic">${ICONS[a]}</span>${esc(allergenLabel(a))}</button>`
   ).join('');
+  const passoverBtn = `<button class="chip ${pasFilter?'active':''}" onclick="togglePassover()">${esc(FILTER_UI[lang].passover)}</button>`;
   document.getElementById('filterBar').innerHTML =
-    `<div class="filter-group"><span class="filter-label">${esc(FILTER_UI[lang].kosher)}</span>${kosherBtns}</div>` +
+    `<div class="filter-group"><span class="filter-label">${esc(FILTER_UI[lang].kosher)}</span>${kosherBtns}${passoverBtn}</div>` +
     `<div class="filter-group"><span class="filter-label">${esc(FILTER_UI[lang].hide)}</span>${allergBtns}</div>`;
 }
 
 function toggleKosher(k) { kosherFilter = k; buildFilters(); render(); }
 function toggleAllergen(a) { hidden.has(a) ? hidden.delete(a) : hidden.add(a); buildFilters(); render(); }
+function togglePassover() { pasFilter = !pasFilter; buildFilters(); render(); }
 
 function card(id) {
   const c = content(id), r = recipes[id], u = ui();
@@ -827,12 +880,12 @@ function render() {
   let html = '', anyShown = false;
 
   const searchingAll = q && searchScope === 'all';
-  const filtering = q || kosherFilter !== 'all' || hidden.size > 0;
+  const filtering = q || kosherFilter !== 'all' || hidden.size > 0 || pasFilter;
 
   CATS.forEach(cat => {
     if (!searchingAll && filter !== 'all' && filter !== cat) return;
     const ids = Object.keys(recipes).filter(id =>
-      recipes[id].category === cat && passKosher(id) && passAllergens(id) && matchSearch(id, q));
+      recipes[id].category === cat && passKosher(id) && passAllergens(id) && passPassover(id) && matchSearch(id, q));
     if (ids.length) {
       anyShown = true;
       html += `<div class="recipe-section">
