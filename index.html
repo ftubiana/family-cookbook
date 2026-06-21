@@ -77,6 +77,7 @@
   .chip-ic { width: 15px; height: 15px; display: inline-flex; }
   .chip-ic svg { width: 100%; height: 100%; }
   .chip.allergen.active { background: #8A2B12; border-color: #8A2B12; color: #fff; text-decoration: line-through; }
+  .chip.passover-chip.active { background: #6B2FA0; border-color: #6B2FA0; color: #fff; }
 
   /* ── BADGES (cards & modal) ── */
   .card-badges { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.8rem; }
@@ -86,6 +87,7 @@
   .kosher-meat  { background: rgba(196,98,45,0.14); color: #9E4A1E; }
   .kosher-dairy { background: rgba(21,101,192,0.12); color: var(--cobalt-deep); }
   .kosher-parve { background: rgba(92,107,58,0.16); color: #46522C; }
+  .passover-pill { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 999px; background: rgba(124,58,173,0.13); color: #6B2FA0; }
   .allergen-ic { width: 18px; height: 18px; color: var(--muted); display: inline-flex; }
   .allergen-ic svg { width: 100%; height: 100%; }
 
@@ -1436,6 +1438,931 @@ const recipes = {
     } },
   },
 
+  artichokeSalad: {
+    category: 'appetizers', contributor: 'Hélène Toubiana', image: '', serves: 4,
+    kosher: 'parve', passover: false, allergens: [],
+    t: { en: {
+      tag: 'Salad', title: 'Artichoke Salad', time: '20 min',
+      desc: 'Thinly sliced fresh artichokes dressed simply with lemon, salt, pepper and paprika — served cold.',
+      ingredients: [
+        ['3','artichokes'],
+        ['','salt'],
+        ['','lemon'],
+        ['','black pepper'],
+        ['','mild paprika'],
+      ],
+      steps: [
+        'Clean and cut the artichokes. Remove the choke (the fuzzy inside) and the hard outer parts. Immerse in water with a little lemon juice.',
+        'Remove from the water, cut into very fine slices, and put in a small salad bowl.',
+        'Squeeze a lemon over them, dust with fine salt and two pinches each of black pepper and paprika. Mix and serve cold.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987.',
+    } },
+  },
+
+  zucchiniSalad: {
+    category: 'appetizers', contributor: 'Hélène Toubiana', image: '', serves: 4,
+    kosher: 'parve', passover: false, allergens: [],
+    t: { en: {
+      tag: 'Salad', title: 'Zucchini Salad', time: '15 min',
+      desc: 'A light, lemony zucchini salad with paprika and black pepper — fresh and served cold.',
+      ingredients: [
+        ['3','zucchini'],
+        ['','salt'],
+        ['','lemon'],
+        ['','black pepper'],
+        ['','mild paprika'],
+      ],
+      steps: [
+        'Cut the zucchini into long thin pieces.',
+        'Put them in a salad bowl. Squeeze a lemon over them, dust with fine salt and two pinches each of black pepper and paprika.',
+        'Mix and serve cold.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987.',
+    } },
+  },
+
+  mzaura: {
+    category: 'appetizers', contributor: 'Hélène Toubiana', image: '', serves: 4,
+    kosher: 'parve', passover: false, allergens: ['spicy'],
+    t: { en: {
+      tag: 'Salad', title: 'M’Zaura (Carrot Salad)', time: '20 min',
+      desc: 'A warm-spiced Tunisian carrot salad — cooked carrots tossed with harissa, lemon and cumin.',
+      ingredients: [
+        ['','carrots'],
+        ['','salt'],
+        ['','harissa'],
+        ['','lemon'],
+        ['','cumin'],
+      ],
+      steps: [
+        'Cut cooked carrots into small slices or cubes.',
+        'Add good quantities of harissa, lemon, cumin powder and salt.',
+        'Mix well and serve.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987.',
+    } },
+  },
+
+  marmouma: {
+    category: 'appetizers', contributor: '', image: '', serves: 6,
+    kosher: 'parve', passover: false, allergens: [],
+    t: { en: {
+      tag: 'Spread', title: 'Marmouma (Tomato & Pepper Confit)', time: '1¾ hrs',
+      desc: 'Slow-cooked tomatoes and peppers with whole garlic cloves and olive oil, simmered down to a jammy confit. Traditionally eaten cold, spread on toast.',
+      ingredients: [
+        ['1 kg (2½ lb)','tomatoes'],
+        ['1','red pepper'],
+        ['1','green pepper'],
+        ['6 cloves','garlic'],
+        ['8 tbsp','olive oil'],
+        ['','salt'],
+      ],
+      steps: [
+        'Pour the olive oil into a frying pan, without heating it yet.',
+        'Wash the tomatoes and cut them in half if medium, in four if large. Place them on the oil in the pan.',
+        'Peel the garlic cloves, keep them whole, and place them on the tomatoes.',
+        'Rinse the peppers, remove the seeds and stems, and cut into roughly 1¼″ × 1½″ pieces. Add on top of everything.',
+        'Salt, then cook over high heat. As soon as it boils, lower the heat, cover and simmer 20–25 minutes — the peppers should be a little cooked.',
+        'Uncover and leave on the heat until there is practically no liquid left, about 1 hour 20 minutes (it depends on the tomatoes). If the vegetables begin to stick, that’s a good sign.',
+        'Rub the bottom of the pan with a wooden spoon and wait until the mixture is completely candied — it will start to look like jam.',
+        'Carefully pour into a small bowl.',
+      ],
+      note: [
+        'The light taste of toasting gives this salad all its charm. Traditionally, Marmouma is eaten cold!',
+        'Adapted from www.harissa.com.',
+      ],
+    } },
+  },
+
+  harissa: {
+    category: 'appetizers', contributor: '', image: '', serves: 20,
+    kosher: 'parve', passover: false, allergens: ['spicy'],
+    t: { en: {
+      tag: 'Condiment', title: 'Harissa', time: '20 min (+ 3 days soaking)',
+      desc: 'The fiery chili-and-garlic paste at the heart of Tunisian cooking — for soups, tajines, or simply spread on bread. Make it as chunky or smooth as you like.',
+      ingredients: [
+        ['~10','dried chili peppers (BADIA, ~3 oz bags, any heat level)'],
+        ['10 cloves','garlic (1 clove per pepper)'],
+        ['1 tsp','ground coriander'],
+        ['1 tsp','ground cumin'],
+        ['1 tsp','salt'],
+        ['¼ cup','olive oil'],
+        ['¼ cup','water (more if needed)'],
+      ],
+      steps: [
+        'Remove the stems from the peppers. Soak for about three days in cold water, with a plate on top to keep them immersed.',
+        'Clean the garlic (or use pre-peeled). Drain the peppers.',
+        'In a food processor, add about 10 peppers (or to suit your machine).',
+        'Add the garlic, coriander, cumin, salt, olive oil and water. Grind chunky or smooth, adding more water if needed.',
+        'Fill into glass jars (for the fridge) or plastic jars (for the freezer). Add a thin layer of oil on top if not using it soon.',
+      ],
+      note: 'Use for soups, tajines, etc., or as a bread spread.',
+    } },
+  },
+
+  bissara: {
+    category: 'appetizers', contributor: 'Hélène Toubiana', image: '', serves: 4,
+    kosher: 'parve', passover: false, allergens: ['spicy'],
+    t: { en: {
+      tag: 'Appetizer', title: 'Bissara (Fava Bean Dish)', time: '1½ hrs (+ overnight soak)',
+      desc: 'Dried fava beans cooked until they fall apart, then seasoned with harissa, cumin and lemon — humble and comforting.',
+      ingredients: [
+        ['','peeled, broken dried fava beans'],
+        ['','harissa'],
+        ['','camoun (cumin)'],
+        ['','lemon'],
+        ['','salt'],
+      ],
+      steps: [
+        'Soak the fava beans overnight.',
+        'Cook until they fall apart.',
+        'Add harissa, cumin, salt and lemon.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987.',
+    } },
+  },
+
+  artichokeDish: {
+    category: 'mains', contributor: 'Hélène Toubiana', image: '', serves: 6,
+    kosher: 'meat', passover: false, allergens: [],
+    t: { en: {
+      tag: 'Main', title: 'Artichoke Dish', time: '2½ hrs',
+      desc: 'A gentle stew of beef (or chicken) and artichokes, brightened with lemon and warmed with cinnamon and turmeric.',
+      ingredients: [
+        ['','onions, diced'],
+        ['','beef (cubed) or chicken'],
+        ['','artichokes'],
+        ['','salt'],
+        ['','lemon'],
+        ['','black pepper'],
+        ['','cinnamon'],
+        ['','turmeric'],
+        ['','mild paprika'],
+        ['','oil'],
+      ],
+      steps: [
+        'Sauté the onions and meat (or chicken), then add salt, lemon, black pepper, cinnamon and turmeric.',
+        'Add water and cook for 1½ hours.',
+        'Meanwhile, clean and cut the artichokes — remove the choke (fuzzy inside) and hard outer parts, and immerse in water with lemon juice.',
+        'Add the artichokes to the stew and cook for 1 hour more.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987.',
+    } },
+  },
+
+  cabbageDish: {
+    category: 'mains', contributor: 'Hélène Toubiana', image: '', serves: 6,
+    kosher: 'meat', passover: false, allergens: [],
+    t: { en: {
+      tag: 'Main', title: 'Cabbage Dish', time: '1½ hrs',
+      desc: 'Cabbage and onions simmered with beef (or ground meat) in a light, coriander-scented tomato sauce.',
+      ingredients: [
+        ['','cabbage, cut into pieces'],
+        ['','onions'],
+        ['','beef or ground meat'],
+        ['','salt'],
+        ['','coriander'],
+        ['','tomato sauce'],
+        ['','oil'],
+      ],
+      steps: [
+        'Sauté the onions and cabbage, then add salt, coriander and the meat (or chopped meat).',
+        'Add a little water, then the tomato sauce.',
+        'Bring to a boil and simmer until the meat is tender.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987.',
+    } },
+  },
+
+  hasbanHajala: {
+    category: 'mains', contributor: 'Hélène Toubiana', image: '', serves: 4,
+    kosher: 'meat', passover: false, allergens: ['gluten','eggs'],
+    t: { en: {
+      tag: 'Main', title: 'Hasban Hajala (Stuffed Peppers)', time: '50 min',
+      desc: '“The dish of the widow” — small peppers filled with a soft bread-and-egg mixture, fried and simmered in garlicky tomato sauce.',
+      ingredients: [
+        ['','small whole or halved peppers'],
+        ['','bread slices, dipped in water and strained'],
+        ['','fresh egg(s)'],
+        ['','coriander'],
+        ['','black pepper'],
+        ['','garlic powder'],
+        ['','salt'],
+        ['','tomato sauce'],
+        ['','oil'],
+      ],
+      steps: [
+        'Fill the peppers with a mixture of bread, egg, spices, garlic and salt.',
+        'Fry on both sides.',
+        'Add tomato sauce and garlic, and simmer for 20 minutes.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987.',
+    } },
+  },
+
+  hlalems: {
+    category: 'mains', contributor: '', image: '', serves: 8,
+    kosher: 'parve', passover: false, allergens: ['gluten','spicy'],
+    t: { en: {
+      tag: 'Soup', title: 'Hlalems (Legume Soup)', time: '2¾ hrs (+ overnight soak)',
+      desc: 'The “Thursday dish” — a hearty soup of legumes and tiny noodles. Traditionally the women twisted little semolina noodles by hand; we use orzo instead. Vegetarian on Thursdays; merguez added on other days.',
+      ingredients: [
+        ['12 oz','orzo'],
+        ['5 oz','lentils'],
+        ['5 oz','chickpeas'],
+        ['3 oz','white beans (cannellini)'],
+        ['1','onion'],
+        ['6 cloves','garlic'],
+        ['2 tbsp','tomato paste (or 4 tbsp tomato sauce)'],
+        ['½ tsp','harissa'],
+        ['','oil'],
+        ['1 tbsp','salt'],
+        ['','black pepper'],
+      ],
+      steps: [
+        'Soak the chickpeas and white beans in cold water overnight.',
+        'Chop the onion and garlic in a food processor and sauté.',
+        'Mix the tomato paste/sauce and harissa into a glass of water, then pour into the pot. Bring to a boil for three minutes.',
+        'Add 2½ quarts of water. Rinse the chickpeas, beans and lentils and add them.',
+        'Bring to a boil and simmer for 2¼ hours, stirring from time to time.',
+        'Add the salt, two pinches of black pepper, and the orzo. Cook for 20 minutes.',
+        'Let stand five minutes before serving.',
+      ],
+      note: 'The Thursday dish — traditionally vegetarian. On other days, add sliced merguez, sautéed with the onion and garlic from the start.',
+    } },
+  },
+
+  mhamer: {
+    category: 'mains', contributor: 'Hélène Toubiana', image: '', serves: 6,
+    kosher: 'meat', passover: false, allergens: ['eggs'],
+    t: { en: {
+      tag: 'Main', title: 'M’Hamer (Filled Baby Eggplant)', time: '1 hr',
+      desc: 'A Sukkot dish — baby eggplants hollowed out, filled with spiced meat, decorated with hard-boiled egg, and fried or baked. Lovely with cumin-dusted fava beans.',
+      ingredients: [
+        ['','baby eggplant'],
+        ['','onion'],
+        ['','chopped meat'],
+        ['','hard-boiled egg, for decoration'],
+        ['','fresh egg(s)'],
+        ['','salt'],
+        ['','black pepper'],
+        ['','cinnamon'],
+        ['','lemon'],
+      ],
+      steps: [
+        'Cut the baby eggplants in half lengthwise. Cut out the inside and add a little lemon juice to the shells. Chop the scooped-out inside with the onion.',
+        'Sauté the chopped meat, onion and eggplant insides. Add salt, cinnamon and black pepper. Let cool.',
+        'Add a fresh egg and mix.',
+        'Fill the eggplant shells with the mixture and decorate with pieces of hard-boiled egg.',
+        'Fry on both sides, or bake.',
+      ],
+      note: [
+        'A Sukkot dish. Serve with cooked fava beans — fresh (rarely available) or dried, soaked and cooked, dusted with a mix of salt and cumin.',
+        'You can also fill small tomatoes, peppers or zucchini the same way, and you can omit the meat.',
+        'From Hélène Toubiana — recorded 1987.',
+      ],
+    } },
+  },
+
+  mtauma: {
+    category: 'mains', contributor: 'Hélène Toubiana', image: '', serves: 6,
+    kosher: 'parve', passover: false, allergens: ['spicy'],
+    t: { en: {
+      tag: 'Main', title: 'M’Tauma (Garlic Spinach & Chickpeas)', time: '1 hr',
+      desc: 'The garlic dish — lots of garlic with spinach and chickpeas, warmed with harissa, coriander, cinnamon and mint. Serve with couscous, rice, or on its own.',
+      ingredients: [
+        ['','spinach, cut small (or frozen leaf spinach)'],
+        ['','chickpeas (soaked overnight and cooked, or canned)'],
+        ['optional','cooked beef'],
+        ['','oil'],
+        ['a lot','garlic, cut in pieces'],
+        ['a little','onion, cut in pieces'],
+        ['','harissa'],
+        ['','coriander'],
+        ['','cinnamon'],
+        ['','nana (mint)'],
+      ],
+      steps: [
+        'Sauté the spinach, garlic and onion with very little oil.',
+        'When the mixture is dry, add more oil and all the other ingredients.',
+        'Add water to cover, bring to a boil, and simmer for 40 minutes.',
+        'Serve with couscous, rice, or alone.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987.',
+    } },
+  },
+
+  matzaSandwiches: {
+    category: 'mains', contributor: 'Hélène Toubiana', image: '', serves: 4,
+    kosher: 'meat', passover: true, allergens: ['gluten','eggs'],
+    t: { en: {
+      tag: 'Main', title: 'Matza Sandwiches', time: '40 min',
+      desc: 'A Passover favourite — sautéed spiced meat between sheets of matza, dipped in egg and fried golden on both sides.',
+      ingredients: [
+        ['','matza'],
+        ['','onions, chopped'],
+        ['','parsley, chopped'],
+        ['','chopped meat'],
+        ['','egg'],
+        ['','oil'],
+        ['','salt'],
+      ],
+      steps: [
+        'Sauté the chopped onions and chopped meat, then add salt and chopped parsley. Set aside.',
+        'Whisk the egg in a big plate.',
+        'Cut the matza into four and sprinkle with water.',
+        'Spread the sautéed mixture on one piece of matza and cover with a second piece.',
+        'Cover both sides with the whisked egg and fry on both sides.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987. A Passover dish.',
+    } },
+  },
+
+  merguez: {
+    category: 'mains', contributor: 'Hélène Toubiana', image: '', serves: 6,
+    kosher: 'meat', passover: false, allergens: ['spicy'],
+    t: { en: {
+      tag: 'Main', title: 'Merguez (Small Sausages)', time: '40 min',
+      desc: 'Homemade spiced sausages of beef (and lamb if available) with garlic, harissa, cumin and fennel — rolled by hand and fried or grilled.',
+      ingredients: [
+        ['','chopped meat — beef, plus lamb if available'],
+        ['a lot','finely chopped garlic'],
+        ['','harissa'],
+        ['','salt'],
+        ['','camoun (ground cumin)'],
+        ['','fennel seeds, ground'],
+        ['','black pepper'],
+        ['','chili pepper, ground'],
+        ['','nutmeg'],
+      ],
+      steps: [
+        'Knead all the ingredients together.',
+        'Roll small portions between your hands to form little sausages.',
+        'Fry in a pan or grill in the oven, turning them over when done on one side.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987.',
+    } },
+  },
+
+  okra: {
+    category: 'mains', contributor: 'Hélène Toubiana', image: '', serves: 6,
+    kosher: 'meat', passover: false, allergens: [],
+    t: { en: {
+      tag: 'Main', title: 'G’naouia / Bamia (Okra)', time: '2½ hrs',
+      desc: 'Okra and beef stewed slowly with deeply caramelised onions, grated tomato, cinnamon and paprika.',
+      ingredients: [
+        ['4','onions'],
+        ['2','tomatoes'],
+        ['','beef'],
+        ['','okra'],
+        ['','black pepper'],
+        ['','mild paprika'],
+        ['','cinnamon'],
+        ['','oil'],
+        ['','salt'],
+      ],
+      steps: [
+        'Sauté the chopped onions well, until they turn red.',
+        'Add the grated tomatoes, meat, spices and water.',
+        'Bring to a boil and simmer for 2 hours.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987.',
+    } },
+  },
+
+  ratatouille: {
+    category: 'mains', contributor: '', image: '', serves: 6,
+    kosher: 'parve', passover: false, allergens: [],
+    t: { en: {
+      tag: 'Main', title: 'Ratatouille', time: '1¼ hrs',
+      desc: 'Not a Tubiana recipe — but Grandma loves ratatouille. A Provençal classic of eggplant, zucchini, yellow squash and sweet peppers simmered in a lively tomato sauce.',
+      ingredients: [
+        ['1 medium','eggplant, cut into 1″ cubes'],
+        ['1 tsp +','salt, plus more for seasoning'],
+        ['¼ cup','olive oil, divided (or as needed)'],
+        ['1 medium','red onion, cut into ½″ pieces'],
+        ['2','red or yellow bell peppers, cut into ½″ pieces'],
+        ['2 medium','zucchini, cut into 1″ pieces'],
+        ['2 medium','yellow squash, cut into 1″ pieces'],
+        ['3 large','plum tomatoes, seeded and coarsely chopped'],
+        ['4 cloves','garlic, minced'],
+        ['½ cup','dry white wine'],
+        ['1 can (15 oz)','crushed tomatoes'],
+        ['1','bay leaf'],
+        ['1 heaping tsp','dried oregano'],
+        ['½ tsp','crushed red pepper flakes'],
+        ['to taste','freshly ground black pepper'],
+        ['¼ cup','fresh basil, thinly sliced'],
+      ],
+      steps: [
+        'Place the eggplant in a colander, sprinkle with salt and let drain while you prep the other vegetables. Pat dry with paper towel.',
+        'Heat 2 tbsp olive oil over medium-high heat in a Dutch oven. Add the eggplant, reduce to medium, and cook 3–4 minutes until beginning to soften and lightly browned. Transfer to a bowl.',
+        'Refresh the oil as needed. Add the zucchini and yellow squash; cook 3–4 minutes until beginning to soften and lightly browned. Add to the bowl with the eggplant.',
+        'Refresh the oil if needed. Add the onion and cook 4–5 minutes until beginning to soften, adjusting the heat so it doesn’t burn.',
+        'Add the bell peppers and cook another 3–4 minutes until beginning to soften.',
+        'Add the chopped tomatoes and garlic and cook 1–2 minutes.',
+        'Add the wine, bring to a boil and cook 1–2 minutes.',
+        'Add the crushed tomatoes, bay leaf, oregano and red pepper flakes.',
+        'Return the eggplant, zucchini and squash to the pot. Reduce to medium-low and simmer uncovered 20–25 minutes, until the vegetables are tender.',
+        'Season with salt and pepper to taste. Remove the bay leaf and stir in the basil.',
+      ],
+      note: 'Not a Tubiana family recipe — adapted from fromachefskitchen.com — but a Grandma favourite.',
+    } },
+  },
+
+  tfinaNikitoush: {
+    category: 'mains', contributor: '', image: '', serves: 8,
+    kosher: 'meat', passover: false, allergens: ['gluten','eggs'],
+    t: { en: {
+      tag: 'Soup', title: 'T’fina Nikitoush (Chicken Soup)', time: '2 hrs',
+      desc: 'Chicken soup for Yom Kippur. The Nikitoush were little handmade round egg noodles — Acini di Pepe is the best replacement. Often served with Dabakhia simmered in the broth.',
+      ingredients: [
+        ['1','whole chicken'],
+        ['1','chicken breast (for the Dabakhia)'],
+        ['6 oz','acini di pepe'],
+        ['','celery'],
+        ['','leek'],
+        ['','onion'],
+        ['','salt'],
+        ['','black pepper'],
+        ['','turmeric'],
+        ['','oil'],
+        ['','— Dabakhia —'],
+        ['2','hard-boiled eggs'],
+        ['','cooked chicken'],
+        ['5','fresh eggs'],
+        ['','salt'],
+        ['a pinch','black pepper'],
+        ['','turmeric'],
+      ],
+      steps: [
+        'Lightly sauté the chopped onion, celery and leek. Add 2¼ quarts of water and bring to a boil.',
+        'Add the whole chicken, salt, two pinches of black pepper and turmeric. Cook for 1½ hours.',
+        'In a separate pot, boil the acini di pepe for 20 minutes, strain, and add to the soup.',
+        'For the Dabakhia: peel the hard-boiled eggs. Finely chop the cooked chicken and hard-boiled eggs.',
+        'Add the fresh eggs, salt, pepper and turmeric, and mix well.',
+        'Oil a deep Pyrex dish and pour in the mixture, leaving at least 1½″ free on top. Set the Pyrex into a pot filled with water to 1½″ below its rim.',
+        'Cook 30–40 minutes, with a cheese cloth wrapped around the lid and tied on top to keep steam from dripping in. It’s ready when a toothpick comes out dry.',
+        'Pour chicken broth (or water) to cover the Dabakhia and let stand 5 minutes to absorb. Loosen the edges, reverse onto a plate, slice and serve.',
+        'If serving Dabakhia with the Nikitoush, immerse it in the chicken soup and simmer 30 minutes.',
+      ],
+      note: 'Chicken soup for Yom Kippur.',
+    } },
+  },
+
+  tfina: {
+    category: 'mains', contributor: 'Hélène Toubiana', image: '', serves: 8,
+    kosher: 'meat', passover: false, allergens: ['gluten','eggs'],
+    t: { en: {
+      tag: 'Main', title: 'T’fina (Shabbat Lunch)', time: '3½ hrs',
+      desc: 'The slow-cooked Shabbat lunch — beef and white beans with vegetables and warm spices, cooked Friday and kept warm overnight, finished with potato-and-matzo-meal boulettes.',
+      ingredients: [
+        ['','onions, diced'],
+        ['','celery, diced'],
+        ['','zucchini, diced'],
+        ['','beef, cubed'],
+        ['','white beans, soaked overnight in cold water'],
+        ['','salt'],
+        ['','black pepper'],
+        ['','cinnamon'],
+        ['','turmeric'],
+        ['','oil'],
+        ['','— Boulettes —'],
+        ['3 small','potatoes, mashed'],
+        ['3 tbsp','matzo meal'],
+        ['1','meat boulette (if available), crushed'],
+        ['2','eggs'],
+      ],
+      steps: [
+        'Sauté the onions, celery and zucchini, then add salt, black pepper, cinnamon and turmeric.',
+        'Add the meat and white beans. Add water and cook for three hours.',
+        'Make the boulettes: mix the mashed potato, matzo meal, crushed boulette and eggs well.',
+        'With a big serving spoon, drop the boulettes on top of the ready T’fina, leaving space between them. Continue simmering for ½ hour.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987. A Shabbat dish, cooked Friday and kept warm.',
+    } },
+  },
+
+  tajinBetenjal: {
+    category: 'mains', contributor: 'Hélène Toubiana', image: '', serves: 4,
+    kosher: 'parve', passover: false, allergens: [],
+    t: { en: {
+      tag: 'Main', title: 'Tajin Betenjal (Eggplant Dish)', time: '45 min',
+      desc: 'Fried eggplant rounds simmered with garlic and tomato sauce — simple and savoury.',
+      ingredients: [
+        ['','eggplant'],
+        ['','oil'],
+        ['','garlic'],
+        ['','salt'],
+        ['','black pepper'],
+        ['','tomato sauce'],
+      ],
+      steps: [
+        'Cut unpeeled eggplants into round slices.',
+        'Fry the slices on both sides.',
+        'Add chopped garlic, tomato sauce, black pepper, salt and a little water. Let simmer.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987.',
+    } },
+  },
+
+  tajinBijiloush: {
+    category: 'mains', contributor: 'Hélène Toubiana', image: '', serves: 4,
+    kosher: 'meat', passover: false, allergens: [],
+    t: { en: {
+      tag: 'Main', title: 'Tajin Bijiloush (Pea Dish)', time: '50 min',
+      desc: 'Chicken braised with garlic, fresh tomato and green peas — light, fresh and coriander-scented.',
+      ingredients: [
+        ['','green peas'],
+        ['','chicken pieces'],
+        ['','garlic, cut'],
+        ['1','tomato'],
+        ['','salt'],
+        ['','coriander'],
+        ['','oil'],
+      ],
+      steps: [
+        'Sauté the garlic and chicken. Add the fresh tomato, cubed.',
+        'Add salt and coriander, then some water, and bring to a boil.',
+        'After 15 minutes, add the green peas and simmer until the chicken is done.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987 by Emile Tubiana.',
+    } },
+  },
+
+  tajinFadLiver: {
+    category: 'mains', contributor: 'Hélène Toubiana', image: '', serves: 6,
+    kosher: 'meat', passover: true, allergens: ['spicy'],
+    t: { en: {
+      tag: 'Main', title: 'Tajin Fad (Liver Dish)', time: '2½ hrs',
+      desc: 'A Passover liver dish — pre-cooked liver and beef stewed with onion, celery, leek and saffron. Serve with Dabakhia.',
+      ingredients: [
+        ['','onions, chopped'],
+        ['','celery, chopped'],
+        ['','leek, chopped'],
+        ['','parsley, cut'],
+        ['','liver (beef, calf or chicken), broiled or cooked first, cut small'],
+        ['','beef, cut small'],
+        ['if available','heart'],
+        ['','turmeric'],
+        ['','saffron'],
+        ['','harissa'],
+        ['','cinnamon'],
+        ['','oil'],
+        ['','salt'],
+      ],
+      steps: [
+        'Sauté the chopped onions, celery, leek and parsley.',
+        'Add the liver, meat, spices and water. Bring to a boil and simmer for 2 hours.',
+        'Serve with Dabakhia.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987. A Passover dish.',
+    } },
+  },
+
+  tajinKhra: {
+    category: 'mains', contributor: 'Hélène Toubiana', image: '', serves: 6,
+    kosher: 'parve', passover: false, allergens: ['spicy'],
+    t: { en: {
+      tag: 'Main', title: 'Tajin Khra (Pumpkin Dish)', time: '1¼ hrs (+ soak)',
+      desc: 'Pumpkin or butternut squash stewed with dried fava beans, harissa and coriander — warming and lightly spiced.',
+      ingredients: [
+        ['','pumpkin or butternut squash, cubed'],
+        ['','dried peeled fava beans, soaked'],
+        ['','salt'],
+        ['','harissa'],
+        ['','coriander'],
+        ['','black pepper'],
+        ['','oil'],
+      ],
+      steps: [
+        'Sauté the harissa, then add coriander, black pepper, salt, fava beans and water.',
+        'Bring to a boil, then simmer until the fava beans are cooked.',
+        'Add the pumpkin or butternut squash. Bring to a boil and simmer until ready.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987.',
+    } },
+  },
+
+  beignets: {
+    category: 'desserts', contributor: '', image: '', serves: 8,
+    kosher: 'parve', passover: false, allergens: ['gluten','eggs'],
+    t: { en: {
+      tag: 'Dessert', title: 'Beignets', time: '1 hr',
+      desc: 'Light, stretched yeast fritters fried until golden and dipped in honey.',
+      ingredients: [
+        ['1 cup','lukewarm water'],
+        ['2 packs','dry yeast'],
+        ['1 tsp','sugar'],
+        ['2','eggs (room temperature)'],
+        ['2½ cups','flour'],
+        ['','salt'],
+        ['','honey, for dipping'],
+        ['','oil, for frying'],
+      ],
+      steps: [
+        'Mix the water, yeast and sugar, and let stand 10 minutes.',
+        'Combine all the ingredients with a mixer and let stand, covered, for 30 minutes.',
+        'Heat oil 1 inch high in a saucepan.',
+        'Take a small amount of dough, pull it in all directions as thin as possible, and place it in the oil one by one. Use a fork to swirl them open.',
+        'Turn as soon as they are golden brown.',
+        'Dip in honey.',
+      ],
+      note: 'Recorded 12/30/1990.',
+    } },
+  },
+
+  caramelCustard: {
+    category: 'desserts', contributor: 'Vivi', image: '', serves: 8,
+    kosher: 'dairy', passover: false, allergens: ['eggs'],
+    t: { en: {
+      tag: 'Dessert', title: 'Caramel Custard (Crème Renversée)', time: '1 hr',
+      desc: 'A silky baked custard set in a caramel-glazed mold and inverted to serve — finished with a touch of cognac.',
+      ingredients: [
+        ['⅔ cup','sugar (to caramelise the mold)'],
+        ['2 tbsp','water (for the mold)'],
+        ['4','whole eggs'],
+        ['4','egg yolks'],
+        ['½ cup','sugar'],
+        ['3⅓ cups','milk, scalded'],
+        ['3 tbsp','cognac'],
+      ],
+      steps: [
+        'Set the oven to 350°F.',
+        'Caramelise (heat slowly) the sugar and water in a 1½-quart fluted metal mold until golden. Reserve.',
+        'In a bowl, beat the whole eggs and egg yolks until pale yellow. Beating constantly, gradually add the ½ cup sugar. Continue until very light and fluffy.',
+        'Beating constantly, gradually add the scalded milk (heated to just below boiling, ~180°F, when tiny bubbles form) and the cognac. Continue until very smooth.',
+        'Strain the custard into the caramelised mold. Place in a shallow pan of hot water and bake until a knife inserted in the center comes out clean, about 40–50 minutes.',
+        'Remove from the oven and cool to room temperature in the mold. Unmold by running a knife around the edge and quickly inverting onto a platter.',
+      ],
+      note: [
+        'If you have extra egg yolks from baking meringues, use them here.',
+        'From Vivi — June 19, 2026.',
+      ],
+    } },
+  },
+
+  clemisCake: {
+    category: 'desserts', contributor: 'Marie-Clémence Dwek', image: '', serves: 12,
+    kosher: 'parve', passover: false, allergens: ['gluten','eggs'],
+    t: { en: {
+      tag: 'Dessert', title: 'Clemi’s Cake', time: '1¼ hrs',
+      desc: 'A simple, dependable family cake — light and vanilla-scented, made with margarine, oil or butter as you like.',
+      ingredients: [
+        ['6','eggs'],
+        ['1¼ cups','sugar'],
+        ['1 cup','margarine (or oil, or butter)'],
+        ['2½ cups','flour'],
+        ['','vanilla'],
+        ['2 tsp','baking powder (mixed into the flour)'],
+        ['pinch','salt'],
+      ],
+      steps: [
+        'Mix the eggs with the sugar, add the margarine (or oil/butter), then the rest of the ingredients.',
+        'Line a baking mold with parchment.',
+        'Preheat the oven to 400°F. Lower to 350°F after five minutes and bake for one hour. Check with a toothpick.',
+      ],
+      note: 'From Marie-Clémence Dwek — recorded 1987. Pareve if made with margarine or oil.',
+    } },
+  },
+
+  coconutMacaroons: {
+    category: 'desserts', contributor: 'Vivi', image: '', serves: 24,
+    kosher: 'parve', passover: false, allergens: ['eggs'],
+    t: { en: {
+      tag: 'Cookies', title: 'Coconut Macaroons', time: '45 min',
+      desc: 'Chewy little coconut mounds with just five ingredients — easy to make chocolate, too.',
+      ingredients: [
+        ['¾ cup','sugar'],
+        ['2½ cups','shredded unsweetened coconut'],
+        ['2','egg whites'],
+        ['1 tsp','vanilla extract'],
+        ['pinch','salt'],
+      ],
+      steps: [
+        'Preheat the oven to 350°F.',
+        'Combine all the ingredients in a large bowl and mix well with a spatula or your hands.',
+        'Line a baking sheet with parchment. Wet your hands and make small piles, about an inch apart.',
+        'Bake until light brown, about 15 minutes.',
+        'Cool on a rack about 30 minutes before eating.',
+      ],
+      note: [
+        'These keep well in a covered container for a few days.',
+        'Variations: add chocolate chips on top or in the mix, or add cocoa to the mix for chocolate macaroons.',
+        'From Vivi — June 19, 2026.',
+      ],
+    } },
+  },
+
+  earlGreyShortbread: {
+    category: 'desserts', contributor: 'Claire Robinson', image: '', serves: 24,
+    kosher: 'dairy', passover: false, allergens: ['gluten'],
+    t: { en: {
+      tag: 'Cookies', title: 'Earl Grey Shortbread Cookies', time: '1 hr (+ chilling)',
+      desc: 'Buttery shortbread fragrant with Earl Grey tea, sliced from a sugar-rolled log and baked until the edges just brown.',
+      ingredients: [
+        ['2 cups','all-purpose flour'],
+        ['2 tbsp','loose Earl Grey tea (or 6 tea bags)'],
+        ['½ tsp','salt'],
+        ['¾ cup','confectioners’ sugar'],
+        ['1 tsp','pure vanilla extract'],
+        ['1 cup (2 sticks)','butter, room temperature'],
+        ['','granulated sugar, for rolling'],
+      ],
+      steps: [
+        'In a food processor, pulse the flour, tea and salt until the tea is just spotted throughout. Add the confectioners’ sugar, vanilla and butter. Pulse just until a dough forms.',
+        'Place the dough on plastic wrap and roll into a log about 2½″ in diameter. Twist the ends tightly and chill 30 minutes.',
+        'Preheat the oven to 375°F.',
+        'Roll the log in granulated sugar. Slice into ⅓″-thick disks and place on parchment- or silpat-lined sheets, 2 inches apart.',
+        'Bake until the edges are just brown, about 12 minutes. Cool on the sheets 5 minutes, then transfer to wire racks to cool completely.',
+      ],
+      note: 'Recipe courtesy of Claire Robinson. Recorded June 19, 2026.',
+    } },
+  },
+
+  krokant: {
+    category: 'desserts', contributor: 'Vivi', image: '', serves: 24,
+    kosher: 'parve', passover: false, allergens: ['nuts','eggs'],
+    t: { en: {
+      tag: 'Cookies', title: 'Krokant & Krokant Meringues', time: '1½ hrs',
+      desc: 'Krokant is candied roasted nuts — wonderful on its own — and folded into meringues it makes delicate, nutty bites.',
+      ingredients: [
+        ['','— Krokant —'],
+        ['8 oz','mixed nuts'],
+        ['8 oz','sugar'],
+        ['5–6 tbsp','water'],
+        ['','— Hazelnut Krokant Meringues —'],
+        ['2','egg whites'],
+        ['⅓ cup','sugar (superfine, if available)'],
+        ['~½ cup','finely ground hazelnut krokant'],
+        ['pinch','salt'],
+      ],
+      steps: [
+        'Make the krokant: grind the nuts finely in a food processor.',
+        'Pour the sugar into a non-stick pan with 5–6 tbsp water and heat on low until the sugar turns brown. Add the ground nuts and mix well. Reduce the heat and let caramelise for 1 minute, stirring constantly.',
+        'Pour the krokant onto parchment, spread out, and let cool. Store in a sterile airtight glass jar, or crumble with a rolling pin. (Enhance with vanilla pulp, grated lemon/orange peel, or butter if you like.)',
+        'Make the meringues: preheat the oven to 250°F and line sheets with parchment.',
+        'Beat the egg whites and salt until soft peaks form. Add the sugar, beating until stiff peaks form.',
+        'Working quickly, fold in the ground hazelnut krokant gently but thoroughly.',
+        'Using a pastry bag or spoon, place about ½ tsp of meringue every ½″. Top each with a nut or chocolate chips, or leave plain.',
+        'Bake for 45 minutes to 1 hour, depending on your oven.',
+      ],
+      note: 'From Vivi — June 19, 2026.',
+    } },
+  },
+
+  makroud: {
+    category: 'desserts', contributor: 'Hélène Toubiana', image: '', serves: 24,
+    kosher: 'parve', passover: false, allergens: ['gluten','eggs'],
+    t: { en: {
+      tag: 'Dessert', title: 'Makroud (Date Pastry)', time: '1½ hrs',
+      desc: 'Semolina pastry rolled around a spiced date filling, sliced on the diagonal, fried or baked, and dipped in fragrant syrup.',
+      ingredients: [
+        ['2 lb','semolina or farina'],
+        ['1 cup','oil (2 cups if baking)'],
+        ['1 tsp','baking soda'],
+        ['2','eggs'],
+        ['1 lb','dates, soaked in warm water and strained'],
+        ['','cinnamon'],
+        ['','orange peel, grated'],
+        ['','ginger'],
+        ['pinch','salt'],
+        ['','— Syrup —'],
+        ['1¼ cups (250g)','sugar'],
+        ['1½ tbsp','honey'],
+        ['¼','lemon'],
+        ['','orange peel'],
+        ['','vanilla'],
+        ['¼ tsp','corn or potato starch'],
+      ],
+      steps: [
+        'Heat the semolina slightly in a pan, stirring. Add salt, oil, 2 egg yolks and a little water to make a dough that can be rolled flat.',
+        'Add a little oil, cinnamon, orange peel and ginger to the soft dates and mix.',
+        'Spread the date mixture over the semolina dough. Roll the whole thing up from one side (use a spatula or wide knife if it sticks).',
+        'Cut diagonal slices, about ¾–1″ wide.',
+        'Method 1: dip each slice in whisked egg white and deep-fry. Method 2: place slices on a cookie sheet and bake (use 2 cups oil in the dough for this method).',
+        'Make the syrup: put 1 cup water in a pot with the sugar, lemon juice, orange peel and vanilla. Bring to a rapid boil, lower the heat, simmer 20 minutes; add the honey and ¼ cup water, stir and simmer 10 minutes. Mix the starch with a little cold water, stir in, and simmer 10 minutes.',
+        'Dip the cooked makrouds in the syrup and let them drain.',
+      ],
+      note: 'From Hélène Toubiana — recorded 1987.',
+    } },
+  },
+
+  mamoul: {
+    category: 'desserts', contributor: 'Marie-Clémence Dwek', image: '', serves: 30,
+    kosher: 'parve', passover: false, allergens: ['nuts','gluten'],
+    t: { en: {
+      tag: 'Dessert', title: 'Mamoul (Date & Nut Pastry)', time: '1¼ hrs',
+      desc: 'Tender filled pastries stuffed with dates and ground nuts, shaped into little domes and decorated before baking.',
+      ingredients: [
+        ['1 cup','margarine'],
+        ['8 cups','flour'],
+        ['2 tbsp','baking powder (mixed into the flour)'],
+        ['½ cup','oil'],
+        ['pinch','salt'],
+        ['1–2 cups','water, to make a rollable dough'],
+        ['8 oz','dates, boiled'],
+        ['8 oz','nuts, ground'],
+      ],
+      steps: [
+        'Roll the dough to ¼″ thin. Cut 3″ circles with a big glass.',
+        'Add 1 tsp of the date/nut mix to each. Bring all sides of the dough up and close into a ball.',
+        'Turn it upside down and decorate the smooth side with sugar or small tongs all around.',
+        'Line a baking sheet with parchment.',
+        'Preheat the oven to 350°F and bake 15 minutes, or until slightly brown.',
+      ],
+      note: 'From Marie-Clémence Dwek — recorded 1987.',
+    } },
+  },
+
+  nutMeringues: {
+    category: 'desserts', contributor: 'Vivi', image: '', serves: 24,
+    kosher: 'parve', passover: false, allergens: ['nuts','eggs'],
+    t: { en: {
+      tag: 'Cookies', title: 'Nut Meringues', time: '1¼ hrs',
+      desc: 'Light, airy meringues folded with finely ground hazelnuts or almonds — optionally flavoured with vanilla or cocoa.',
+      ingredients: [
+        ['2','egg whites'],
+        ['½ cup','sugar (superfine, if available)'],
+        ['~½ cup','finely ground nuts (hazelnuts, almonds)'],
+        ['pinch','salt'],
+        ['optional','1 tsp vanilla, cocoa powder'],
+      ],
+      steps: [
+        'Preheat the oven to 250°F and line baking sheets with parchment.',
+        'Beat the egg whites and salt until soft peaks form.',
+        'Add the sugar, beating until stiff peaks form.',
+        'Working quickly, fold in the ground nuts gently but thoroughly.',
+        'Using a pastry bag or spoon, place about ½ tsp of meringue every ½″. Top each with a nut or chocolate chips, or leave plain.',
+        'Bake for 45 minutes to 1 hour, depending on your oven.',
+      ],
+      note: 'From Vivi — June 19, 2026.',
+    } },
+  },
+
+  tartaSantiago: {
+    category: 'desserts', contributor: 'Vivi', image: '', serves: 8,
+    kosher: 'parve', passover: false, allergens: ['nuts','eggs'],
+    t: { en: {
+      tag: 'Dessert', title: 'Tarta de Santiago (St. James’ Cake)', time: '50 min',
+      desc: 'Viv’s favourite almond cake — a traditional, naturally gluten-free Spanish cake from Galicia, made with ground almonds, eggs and citrus, dusted with the Cross of St. James.',
+      ingredients: [
+        ['2 cups (200g)','almond flour or finely ground almonds'],
+        ['1 cup (200g)','granulated sugar'],
+        ['4 large','eggs'],
+        ['','zest of 1 lemon'],
+        ['½ tsp','ground cinnamon'],
+        ['','powdered sugar, for dusting'],
+      ],
+      steps: [
+        'Preheat the oven to 350°F (175°C). Grease and line a 9″ round springform pan with parchment.',
+        'In a large bowl, whisk together the almond flour, sugar, lemon zest and cinnamon.',
+        'Add the eggs one at a time, whisking until fully combined and smooth.',
+        'Pour into the prepared pan and smooth the top. Bake 35–40 minutes, until golden and a toothpick comes out clean.',
+        'Cool completely in the pan, then remove to a serving plate.',
+        'Place a St. James cross stencil (or a cut-paper template) on top and dust generously with powdered sugar. Gently remove the stencil to reveal the pattern.',
+      ],
+      note: [
+        'For extra flavour, add a splash of almond extract. Serve with whipped cream or vanilla ice cream.',
+        'A doily cut from a round folded paper also works for the sugar dusting.',
+        'From Vivi — June 19, 2026.',
+      ],
+    } },
+  },
+
+  yoyo: {
+    category: 'desserts', contributor: 'Vivi', image: '', serves: 30,
+    kosher: 'parve', passover: false, allergens: ['gluten','eggs'],
+    t: { en: {
+      tag: 'Dessert', title: 'Yoyo (Doughnuts)', time: '1¼ hrs',
+      desc: 'Orange-scented ring doughnuts fried until golden and dipped straight into warm honey — a Tunisian celebration sweet.',
+      ingredients: [
+        ['300–350 g','flour'],
+        ['3 tbsp','confectioners’ sugar'],
+        ['pinch','salt'],
+        ['2 pouches','vanilla sugar (or 2–3 tsp vanilla extract)'],
+        ['2 pouches','baking powder (about 6 tsp)'],
+        ['3','eggs'],
+        ['3 tbsp','oil (peanut or olive)'],
+        ['2 tbsp','orange blossom water (optional)'],
+        ['','oil, for frying'],
+        ['½ jar','honey, thinned with water'],
+      ],
+      steps: [
+        'Mix all the ingredients into a ball of dough — not too soft, not too hard. Let it rest at least 30 minutes.',
+        'Take small pieces of dough and roll them out to about ½″ (1 cm) thick. Cut into 4″ (10 cm) lengths, form into rings, and stick the ends together.',
+        'Heat the frying oil about 5 minutes on high, then keep it on medium. Fry the yoyos a few at a time — they expand, so give them space. When golden, lift out with a slotted spoon onto a colander.',
+        'Bring the honey to a boil and dip the yoyos right after frying.',
+      ],
+      note: [
+        'Variations: use orange or lemon zest instead of orange blossom water. You can also roll the dough flat and cut rings with a glass and a smaller center. After the honey dip, they can be rolled in sugar.',
+        'Hélène Toubiana’s original method (recorded 1987): use equal volumes of egg, water, oil and sugar, plus baking powder, a pinch of salt, and enough flour for a soft rollable dough; cut circles with a glass and make holes with a cap; deep-fry.',
+        'From Vivi.',
+      ],
+    } },
+  },
+
   /* israeliSalad: {
     category: 'sides',
     contributor: 'Tubiana Family',
@@ -1562,7 +2489,7 @@ const recipes = {
 const KOSHER = {
   meat:  { en:'Meat',  fr:'Viande',   de:'Fleischig', es:'Carne',   ro:'Carne',   he:'בשרי',   ar:'لحمي' },
   dairy: { en:'Dairy', fr:'Laitier',  de:'Milchig',   es:'Lácteo',  ro:'Lactate', he:'חלבי',   ar:'حليبي' },
-  parve: { en:'Parve', fr:'Parve',    de:'Parve',     es:'Parve',   ro:'Parve',   he:'פרווה',  ar:'بارفيه' },
+  parve: { en:'Pareve', fr:'Pareve',  de:'Pareve',    es:'Pareve',  ro:'Pareve',  he:'פרווה',  ar:'بارفيه' },
 };
 
 const ALLERGENS = ['nuts','gluten','eggs','fish','sesame','soy','spicy'];
@@ -1578,13 +2505,13 @@ const ALLERGEN_LABELS = {
 };
 
 const FILTER_UI = {
-  en:{ kosher:'Kosher', hide:'Hide', passover:'Passover' },
-  fr:{ kosher:'Casher', hide:'Masquer', passover:'Pessah' },
-  de:{ kosher:'Koscher', hide:'Ausblenden', passover:'Pessach' },
-  es:{ kosher:'Kosher', hide:'Ocultar', passover:'Pésaj' },
-  ro:{ kosher:'Cușer', hide:'Ascunde', passover:'Pesah' },
-  he:{ kosher:'כשרות', hide:'הסתר', passover:'פסח' },
-  ar:{ kosher:'كوشر', hide:'إخفاء', passover:'الفصح' },
+  en:{ kosher:'Kosher', hide:'Hide', passover:'Passover', holiday:'Holiday' },
+  fr:{ kosher:'Casher', hide:'Masquer', passover:'Pessah', holiday:'Fête' },
+  de:{ kosher:'Koscher', hide:'Ausblenden', passover:'Pessach', holiday:'Feiertag' },
+  es:{ kosher:'Kosher', hide:'Ocultar', passover:'Pésaj', holiday:'Festividad' },
+  ro:{ kosher:'Cușer', hide:'Ascunde', passover:'Pesah', holiday:'Sărbătoare' },
+  he:{ kosher:'כשרות', hide:'הסתר', passover:'פסח', holiday:'חג' },
+  ar:{ kosher:'كوشر', hide:'إخفاء', passover:'الفصح', holiday:'عيد' },
 };
 
 const ICONS = {
@@ -1616,8 +2543,9 @@ function passPassover(id) { return !pasFilter || recipes[id].passover === true; 
 function badgesHTML(id) {
   const r = recipes[id];
   const pill = `<span class="kosher-pill kosher-${r.kosher}">${esc(kosherName(id))}</span>`;
+  const pas = r.passover ? `<span class="passover-pill">${esc(FILTER_UI[lang].passover)}</span>` : '';
   const ic = r.allergens.map(a => `<span class="allergen-ic" title="${esc(allergenLabel(a))}">${ICONS[a]}</span>`).join('');
-  return pill + ic;
+  return pill + pas + ic;
 }
 function content(id) { return recipes[id].t[lang] || recipes[id].t.en; }
 function hasTranslation(id) { return !!recipes[id].t[lang]; }
@@ -1704,9 +2632,10 @@ function buildFilters() {
   const allergBtns = ALLERGENS.map(a =>
     `<button class="chip allergen ${hidden.has(a)?'active':''}" onclick="toggleAllergen('${a}')"><span class="chip-ic">${ICONS[a]}</span>${esc(allergenLabel(a))}</button>`
   ).join('');
-  const passoverBtn = `<button class="chip ${pasFilter?'active':''}" onclick="togglePassover()">${esc(FILTER_UI[lang].passover)}</button>`;
+  const passoverBtn = `<button class="chip passover-chip ${pasFilter?'active':''}" onclick="togglePassover()">${esc(FILTER_UI[lang].passover)}</button>`;
   document.getElementById('filterBar').innerHTML =
-    `<div class="filter-group"><span class="filter-label">${esc(FILTER_UI[lang].kosher)}</span>${kosherBtns}${passoverBtn}</div>` +
+    `<div class="filter-group"><span class="filter-label">${esc(FILTER_UI[lang].kosher)}</span>${kosherBtns}</div>` +
+    `<div class="filter-group"><span class="filter-label">${esc(FILTER_UI[lang].holiday)}</span>${passoverBtn}</div>` +
     `<div class="filter-group"><span class="filter-label">${esc(FILTER_UI[lang].hide)}</span>${allergBtns}</div>`;
 }
 
