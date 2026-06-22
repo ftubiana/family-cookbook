@@ -1,0 +1,7 @@
+# Private family site.
+# Crawling is TEMPORARILY ALLOWED so search engines re-crawl the page, see its
+# <meta name="robots" content="noindex"> and permanently drop it from results.
+# Once it's gone (~1-2 weeks), re-block by uncommenting "Disallow: /" below.
+User-agent: *
+Allow: /
+# Disallow: /
