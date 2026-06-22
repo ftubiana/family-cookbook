@@ -93,8 +93,13 @@
   .nav-controls { margin-inline-start: auto; display: flex; gap: 0.6rem; align-items: center; }
   .search, .lang-select, .scope-select { background: var(--white); border: 1.5px solid var(--border); border-radius: 8px; padding: 0.45rem 0.75rem; font-family: 'Inter', sans-serif; font-size: 0.8rem; color: var(--ink); transition: border-color 0.15s; }
   .search:focus, .lang-select:focus, .scope-select:focus { outline: none; border-color: var(--cobalt); }
-  .search { width: 160px; }
+  .search { width: 180px; padding-inline-end: 1.9rem; }
+  .search::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
   .lang-select, .scope-select { cursor: pointer; }
+  .search-wrap { position: relative; display: inline-flex; align-items: center; }
+  .search-clear { position: absolute; inset-inline-end: 0.4rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); font-size: 1.2rem; line-height: 1; cursor: pointer; padding: 0 0.2rem; transition: color 0.15s; }
+  .search-clear:hover { color: var(--ink); }
+  .search-clear[hidden] { display: none; }
 
   /* ── FILTER BAR ── */
   .filter-bar { max-width: 1000px; margin: 0 auto; padding: 1.5rem 2rem 0; display: flex; flex-wrap: wrap; gap: 1rem 1.75rem; }
@@ -201,9 +206,10 @@
   @media (max-width: 760px) {
     /* Nav */
     .nav-inner { padding: 0.6rem 1rem; gap: 0.5rem; }
-    .nav-controls { width: 100%; margin-inline-start: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
-    .search { width: 100%; grid-column: 1 / -1; }
-    .scope-select, .lang-select { width: 100%; min-width: 0; }
+    .nav-controls { width: 100%; margin-inline-start: 0; display: flex; gap: 0.5rem; }
+    .search-wrap { width: 100%; }
+    .search { width: 100%; }
+    .lang-select { width: 100%; min-width: 0; }
 
     /* Filter bar */
     .filter-bar { padding: 1rem 1rem 0; gap: 0.6rem 1.25rem; }
@@ -316,8 +322,10 @@
   <div class="nav-inner">
     <div class="nav-tabs" id="navTabs"></div>
     <div class="nav-controls">
-      <input id="search" class="search" type="search" oninput="onSearch(this.value)" aria-label="Search">
-      <select id="scopeSelect" class="scope-select" onchange="onScope(this.value)" aria-label="Search scope"></select>
+      <div class="search-wrap">
+        <input id="search" class="search" type="search" oninput="onSearch(this.value)" aria-label="Search">
+        <button id="searchClear" class="search-clear" type="button" onclick="clearSearch()" aria-label="Clear search" hidden>&times;</button>
+      </div>
       <!-- Language selector hidden for now — uncomment to restore multi-language switching
       <select id="langSelect" class="lang-select" onchange="setLang(this.value)" aria-label="Language"></select>
       -->
@@ -354,7 +362,7 @@ const I18N = {
     eyebrow:'A collection of family recipes', sub:'Made with love & memory', search:'Search recipes…',
     cats:{ all:'All', appetizers:'Appetizers', mains:'Mains', sides:'Sides', desserts:'Desserts' },
     ingredients:'Ingredients', method:'Method', timeLabel:'Time', servesLabel:'Serves',
-    contributedBy:'Recipe from', print:'Print recipe', countWord:'recipes', scopeTab:'This tab', scopeAll:'All recipes',
+    contributedBy:'Recipe from', print:'Print recipe', countWord:'recipes', scopeTab:'This tab', scopeAll:'All recipes', results:'Results',
     units:'Units', unitMetric:'Metric', unitImperial:'Imperial',
     emptyTitle:'Nothing here yet', emptyBody:'Recipes will be added to this section soon.',
     noResults:'No recipes match your search.',
@@ -365,7 +373,7 @@ const I18N = {
     eyebrow:'Une collection de recettes de famille', sub:'Faites avec amour & souvenirs', search:'Rechercher des recettes…',
     cats:{ all:'Tout', appetizers:'Entrées', mains:'Plats', sides:'Accompagnements', desserts:'Desserts' },
     ingredients:'Ingrédients', method:'Préparation', timeLabel:'Temps', servesLabel:'Pour',
-    contributedBy:'Recette de', print:'Imprimer la recette', countWord:'recettes', scopeTab:'Cet onglet', scopeAll:'Toutes les recettes',
+    contributedBy:'Recette de', print:'Imprimer la recette', countWord:'recettes', scopeTab:'Cet onglet', scopeAll:'Toutes les recettes', results:'Résultats',
     units:'Unités', unitMetric:'Métrique', unitImperial:'Impérial',
     emptyTitle:'Rien ici pour l’instant', emptyBody:'Des recettes seront bientôt ajoutées à cette section.',
     noResults:'Aucune recette ne correspond à votre recherche.',
@@ -376,7 +384,7 @@ const I18N = {
     eyebrow:'Eine Sammlung von Familienrezepten', sub:'Mit Liebe & Erinnerung gemacht', search:'Rezepte suchen…',
     cats:{ all:'Alle', appetizers:'Vorspeisen', mains:'Hauptgerichte', sides:'Beilagen', desserts:'Desserts' },
     ingredients:'Zutaten', method:'Zubereitung', timeLabel:'Zeit', servesLabel:'Für',
-    contributedBy:'Rezept von', print:'Rezept drucken', countWord:'Rezepte', scopeTab:'Dieser Tab', scopeAll:'Alle Rezepte',
+    contributedBy:'Rezept von', print:'Rezept drucken', countWord:'Rezepte', scopeTab:'Dieser Tab', scopeAll:'Alle Rezepte', results:'Ergebnisse',
     units:'Einheiten', unitMetric:'Metrisch', unitImperial:'Imperial',
     emptyTitle:'Noch nichts hier', emptyBody:'Rezepte werden bald zu diesem Bereich hinzugefügt.',
     noResults:'Keine Rezepte gefunden.',
@@ -387,7 +395,7 @@ const I18N = {
     eyebrow:'Una colección de recetas familiares', sub:'Hechas con amor y memoria', search:'Buscar recetas…',
     cats:{ all:'Todo', appetizers:'Entrantes', mains:'Platos principales', sides:'Guarniciones', desserts:'Postres' },
     ingredients:'Ingredientes', method:'Preparación', timeLabel:'Tiempo', servesLabel:'Para',
-    contributedBy:'Receta de', print:'Imprimir receta', countWord:'recetas', scopeTab:'Esta pestaña', scopeAll:'Todas las recetas',
+    contributedBy:'Receta de', print:'Imprimir receta', countWord:'recetas', scopeTab:'Esta pestaña', scopeAll:'Todas las recetas', results:'Resultados',
     units:'Unidades', unitMetric:'Métrico', unitImperial:'Imperial',
     emptyTitle:'Nada aquí todavía', emptyBody:'Pronto se añadirán recetas a esta sección.',
     noResults:'No hay recetas que coincidan con tu búsqueda.',
@@ -398,7 +406,7 @@ const I18N = {
     eyebrow:'O colecție de rețete de familie', sub:'Făcute cu dragoste și amintiri', search:'Caută rețete…',
     cats:{ all:'Toate', appetizers:'Aperitive', mains:'Feluri principale', sides:'Garnituri', desserts:'Deserturi' },
     ingredients:'Ingrediente', method:'Mod de preparare', timeLabel:'Timp', servesLabel:'Porții',
-    contributedBy:'Rețetă de la', print:'Printează rețeta', countWord:'rețete', scopeTab:'Această filă', scopeAll:'Toate rețetele',
+    contributedBy:'Rețetă de la', print:'Printează rețeta', countWord:'rețete', scopeTab:'Această filă', scopeAll:'Toate rețetele', results:'Rezultate',
     units:'Unități', unitMetric:'Metric', unitImperial:'Imperial',
     emptyTitle:'Nimic aici încă', emptyBody:'În curând vor fi adăugate rețete în această secțiune.',
     noResults:'Nicio rețetă nu corespunde căutării.',
@@ -409,7 +417,7 @@ const I18N = {
     eyebrow:'אוסף מתכונים משפחתיים', sub:'נעשה באהבה ומתוך זיכרון', search:'חיפוש מתכונים…',
     cats:{ all:'הכול', appetizers:'מנות פתיחה', mains:'מנות עיקריות', sides:'תוספות', desserts:'קינוחים' },
     ingredients:'מרכיבים', method:'אופן ההכנה', timeLabel:'זמן', servesLabel:'מספר מנות',
-    contributedBy:'מתכון של', print:'הדפסת המתכון', countWord:'מתכונים', scopeTab:'בלשונית זו', scopeAll:'כל המתכונים',
+    contributedBy:'מתכון של', print:'הדפסת המתכון', countWord:'מתכונים', scopeTab:'בלשונית זו', scopeAll:'כל המתכונים', results:'תוצאות',
     units:'יחידות', unitMetric:'מטרי', unitImperial:'אימפריאלי',
     emptyTitle:'עדיין אין כאן כלום', emptyBody:'מתכונים יתווספו לקטע הזה בקרוב.',
     noResults:'לא נמצאו מתכונים מתאימים.',
@@ -420,7 +428,7 @@ const I18N = {
     eyebrow:'مجموعة من وصفات العائلة', sub:'صُنعت بحب وذكرى', search:'ابحث عن وصفات…',
     cats:{ all:'الكل', appetizers:'المقبلات', mains:'الأطباق الرئيسية', sides:'الأطباق الجانبية', desserts:'الحلويات' },
     ingredients:'المكوّنات', method:'طريقة التحضير', timeLabel:'الوقت', servesLabel:'يكفي لـ',
-    contributedBy:'وصفة من', print:'طباعة الوصفة', countWord:'وصفات', scopeTab:'هذه التبويبة', scopeAll:'كل الوصفات',
+    contributedBy:'وصفة من', print:'طباعة الوصفة', countWord:'وصفات', scopeTab:'هذه التبويبة', scopeAll:'كل الوصفات', results:'النتائج',
     units:'الوحدات', unitMetric:'متري', unitImperial:'إمبراطوري',
     emptyTitle:'لا يوجد شيء هنا بعد', emptyBody:'ستتم إضافة وصفات إلى هذا القسم قريبًا.',
     noResults:'لا توجد وصفات تطابق بحثك.',
@@ -2724,6 +2732,211 @@ const recipes = {
     } },
   },
 
+  robertasPizzaDough: {
+    category: 'mains', contributor: 'Viv', image: '', serves: 4,
+    kosher: 'parve', passover: false, allergens: ['gluten'],
+    t: { en: {
+      tag: 'Dough', title: 'Roberta’s Pizza Dough', time: '20 min (+ 3+ hrs rising)',
+      desc: 'The famous Roberta’s pizza dough — delicate and deeply flavorful, from a blend of Italian “00” and all-purpose flour. It keeps in the fridge up to a week, and rewards weighing the ingredients.',
+      ingredients: [
+        ['153 g','“00” flour (1 cup + 1 tbsp)'],
+        ['153 g','all-purpose flour (1 cup + 1 tbsp + 2 tsp)'],
+        ['8 g','fine sea salt (1 tsp)'],
+        ['2 g','active dry yeast (¾ tsp)'],
+        ['4 g','extra-virgin olive oil (1 tsp)'],
+        ['200 g','lukewarm water (a little less than 1 cup)'],
+      ],
+      steps: [
+        'In a large bowl, combine the flours and salt.',
+        'In a small bowl, stir together the lukewarm water, yeast and olive oil, then pour into the flour mixture. Knead by hand until well combined, about 3 minutes, then rest 15 minutes.',
+        'Knead the rested dough for 3 minutes. Cut into 2 equal pieces and shape each into a ball.',
+        'Place on a heavily floured surface, cover with a dampened cloth, and let rise 3–4 hours at room temperature, or 8–24 hours in the fridge (remove 30–45 minutes before shaping).',
+        'To make pizza, stretch each ball on a heavily floured surface with your fingers, shape into a round or square, then top and bake.',
+      ],
+      note: 'From Viv. Roberta’s pizza dough — NYT Cooking, adapted by Sam Sifton. Makes two 12-inch pizzas; best measured by weight.',
+    } },
+  },
+
+  lisaPizzaDough: {
+    category: 'mains', contributor: 'Viv', image: '', serves: 8,
+    kosher: 'parve', passover: false, allergens: ['gluten'],
+    t: { en: {
+      tag: 'Dough', title: 'Lisa Sari’s Pizza Dough', time: '30 min (+ rising)',
+      desc: 'A versatile family pizza dough — enough for two large pizzas, four individual ones, or pizza plus a focaccia. Great made ahead and chilled or frozen.',
+      ingredients: [
+        ['1 pack (2¼ tsp)','yeast'],
+        ['¼ cup','warm water (for the yeast)'],
+        ['4 cups','flour'],
+        ['1 tbsp','sugar'],
+        ['1 tbsp','olive oil'],
+        ['~1 cup','cold water (less than 2 cups)'],
+        ['1 tbsp','salt'],
+      ],
+      steps: [
+        'Dissolve the yeast in ¼ cup warm water.',
+        'Combine the flour, sugar and olive oil. Gradually add the cold water (usually about 1 cup) and the yeast, and mix into a ball.',
+        'Add the salt and knead into a smooth, elastic dough — slam it on the counter a few times.',
+        'Place in an oiled ziplock bag or covered bowl and leave out until doubled in size. (You can refrigerate overnight at this point.)',
+        'Cut into pieces (keep the top on top), fold into balls on oiled parchment, and let double again. (Or shape into balls now and refrigerate or freeze in a greased container.)',
+        'Form into pizzas on a floured surface, brush with a little oil, then sauce and cheese. Bake on parchment or a pizza stone at 450–500°F.',
+      ],
+      note: [
+        'From Viv — Lisa Sari Schoen’s recipe.',
+        'For focaccia: let the dough rise a second time on the pan with lots of olive oil under and on top; add coarse salt and rosemary, and bake at 500°F.',
+      ],
+    } },
+  },
+
+  hamantaschenMartha: {
+    category: 'desserts', contributor: 'Viv', image: '', serves: 24,
+    kosher: 'dairy', passover: false, allergens: ['gluten','eggs'],
+    t: { en: {
+      tag: 'Dessert', title: 'Buttery Hamantaschen (Martha)', time: '40 min (+ 2 hrs chill)',
+      desc: 'A rich, buttery hamantaschen dough brightened with lemon zest — lovely filled with Nutella, or with fleur de sel and pecans.',
+      ingredients: [
+        ['¾ cup','confectioners’ sugar'],
+        ['4 oz (1 stick)','butter'],
+        ['2 cups','flour'],
+        ['2','egg yolks'],
+        ['','zest of ½ lemon'],
+      ],
+      steps: [
+        'Combine the sugar, butter and flour with a hand blender, then add the egg yolks and lemon zest. Mix by hand for best results.',
+        'Add 1–5 tablespoons of water (or a little more flour) as needed, until the dough comes together into one ball.',
+        'Shape into a flat disk about ½–1″ thick, wrap in plastic, and refrigerate at least 2 hours.',
+        'Preheat the oven to 350°F.',
+        'Roll out the dough on a floured surface (flour the rolling pin too). Cut 2–3″ circles with a glass or cutter and add your favorite filling.',
+        'Pinch the corners well (or overlap and pinch) into triangles.',
+        'Bake 10–15 minutes, checking after 10.',
+      ],
+      note: 'From Viv (Martha’s recipe — originally 2 sticks of butter, reduced to 1). Try rolled in colored sprinkles and filled with Nutella, or filled with fleur de sel and pecans.',
+    } },
+  },
+
+  gefilteFish: {
+    category: 'appetizers', contributor: 'Viv', image: '', serves: 10,
+    kosher: 'parve', passover: true, allergens: ['fish','eggs','gluten'],
+    t: { en: {
+      tag: 'Appetizer', title: 'Gefilte Fish', time: '2½ hrs (+ overnight chill)',
+      desc: 'Homemade gefilte fish patties of carp and whitefish (with a salmon variation), gently poached in a fish broth with carrots and parsnips. A Passover classic — it sounds more complicated than it is.',
+      ingredients: [
+        ['','— Broth —'],
+        ['1 large','onion, quartered'],
+        ['2','carrots, whole'],
+        ['2','parsnips, whole'],
+        ['','fish heads, bones and skins'],
+        ['','salt'],
+        ['','peppercorns'],
+        ['','fresh dill or parsley, if available'],
+        ['','— Fish patties —'],
+        ['½ lb','ground carp'],
+        ['½ lb','ground whitefish'],
+        ['1 large','onion, finely chopped'],
+        ['2','eggs'],
+        ['as needed','matzo meal'],
+        ['','salt & pepper'],
+        ['','— Salmon variation —'],
+        ['½ lb','ground salmon'],
+        ['1','shallot, chopped'],
+        ['1','egg'],
+        ['','matzo meal, salt & pepper'],
+      ],
+      steps: [
+        'Make the broth: place the onion, carrots, parsnips, fish heads/bones/skins, salt, peppercorns and dill in a large pot. Cover with water, bring to a boil, then cover and simmer 1 hour. Strain, reserving the carrots and parsnips for serving, and return the broth to the pot.',
+        'Make the fish mixture: combine the ground carp, whitefish, chopped onion, eggs, matzo meal, salt and pepper. Refrigerate ½ hour.',
+        'Form into small patties and gently lower into the simmering broth. Simmer about 1 hour (don’t add water — it would thin the broth). Remove the patties to cool, then strain and chill the broth.',
+        'For salmon gefilte fish: combine the ground salmon, shallot, egg, matzo meal, salt and pepper into patties and poach in the same broth about 45 minutes.',
+        'Refrigerate the gefilte fish and broth overnight. Serve with the sliced carrots and parsnips, and horseradish.',
+      ],
+      note: 'From Viv — adapted from Martha’s and Deborah’s gefilte fish. Happy Passover!',
+    } },
+  },
+
+  payardCookies: {
+    category: 'desserts', contributor: 'Viv', image: '', serves: 12,
+    kosher: 'parve', passover: false, allergens: ['nuts','eggs'],
+    t: { en: {
+      tag: 'Cookies', title: 'François Payard’s Flourless Chocolate-Walnut Cookies', time: '40 min',
+      desc: 'Glossy, deeply chocolatey flourless cookies packed with toasted walnuts — naturally gluten-free, bound only with egg whites.',
+      ingredients: [
+        ['2¾ cups','walnut halves'],
+        ['3 cups','confectioners’ sugar'],
+        ['½ cup + 3 tbsp','Dutch-process cocoa powder'],
+        ['¼ tsp','salt'],
+        ['4 large','egg whites, room temperature'],
+        ['1 tbsp','vanilla extract'],
+      ],
+      steps: [
+        'Preheat the oven to 350°F. Toast the walnuts on a rimmed baking sheet about 9 minutes, until golden and fragrant. Cool slightly, then coarsely chop.',
+        'Lower the oven to 320°F and position racks in the upper and lower thirds. Line two baking sheets with parchment.',
+        'In a large bowl, whisk the confectioners’ sugar with the cocoa and salt, then the chopped walnuts. Add the egg whites and vanilla and beat just until moistened — do not overbeat or it will stiffen.',
+        'Spoon the batter into 12 evenly spaced mounds. Bake 14–16 minutes, until the tops are glossy and lightly cracked, rotating the pans front-to-back and top-to-bottom halfway through.',
+        'Slide the parchment (with the cookies) onto wire racks and let cool completely. Store airtight up to 3 days.',
+      ],
+      note: 'From Viv — François Payard’s recipe. Half batch: 1½ cups walnuts, 1½ cups confectioners’ sugar, ¼ cup + 1½ tbsp cocoa, ⅛ tsp salt, 2 egg whites, 1 tsp vanilla.',
+    } },
+  },
+
+  hamantaschenBubbie: {
+    category: 'desserts', contributor: 'Viv', image: '', serves: 36,
+    kosher: 'dairy', passover: false, allergens: ['gluten','eggs'],
+    t: { en: {
+      tag: 'Dessert', title: 'Bubbie’s Hamantaschen', time: '40 min (+ chill)',
+      desc: 'A big batch of tender hamantaschen scented with orange juice and vanilla. Fill with apricot, raspberry, poppyseed or prune — pinched into Purim triangles.',
+      ingredients: [
+        ['½ cup (1 stick)','unsalted butter or margarine'],
+        ['1 cup','sugar'],
+        ['2','eggs'],
+        ['6 tbsp','orange juice'],
+        ['1 tbsp','vanilla'],
+        ['2 tsp','baking powder'],
+        ['4½ cups','flour'],
+        ['','filling: canned cake filling (apricot/raspberry), poppyseed or prune (lekvar), chocolate chips, or cinnamon-sugar with chopped nuts'],
+      ],
+      steps: [
+        'Preheat the oven to 375°F.',
+        'Cream the butter (or margarine) and sugar. Add the eggs, orange juice and vanilla and beat well.',
+        'Combine the flour and baking powder and add to the wet mixture (a bread hook helps). When the dough forms, cover tightly and refrigerate several hours or overnight.',
+        'Roll out chunks of dough thinly. Cut round shapes with a large cutter, glass or small bowl.',
+        'Fill each with a teaspoon of filling and pinch into 3 corners.',
+        'Place on parchment-lined sheets and bake 15 minutes.',
+      ],
+      note: 'From Viv — her bubbie’s recipe. Use margarine instead of butter to make it pareve. Use canned cake filling, not pie filling or jelly (it gets too runny).',
+    } },
+  },
+
+  vivsCookies: {
+    category: 'desserts', contributor: 'Viv', image: '', serves: 36,
+    kosher: 'dairy', passover: false, allergens: ['gluten','eggs'],
+    t: { en: {
+      tag: 'Cookies', title: 'Viv’s Roll-Out Cookies', time: '45 min',
+      desc: 'Viv’s easy roll-out sugar cookies with a lemon icing and sprinkles — a great rainy-day project for cutting out shapes.',
+      ingredients: [
+        ['1 cup','unsalted butter, softened'],
+        ['1 cup','sugar'],
+        ['1 large','egg'],
+        ['1 tsp','vanilla'],
+        ['2 tsp','baking powder'],
+        ['3 cups','flour'],
+        ['','— Icing —'],
+        ['as needed','confectioners’ (10X) sugar'],
+        ['2 tsp','lemon juice'],
+        ['','warm water, as needed'],
+        ['2 tsp','lemon zest (optional)'],
+        ['','colored sugar sprinkles'],
+      ],
+      steps: [
+        'Preheat the oven to 400°F. In a large bowl, cream the butter and sugar with an electric mixer. Beat in the egg and vanilla.',
+        'Add the baking powder and the flour one cup at a time, mixing after each. The dough will be very stiff — blend the last flour in by hand. Do not chill.',
+        'Divide the dough into 2 balls. On a floured surface, roll each into a circle about 12″ across and ⅛″ thick. Dip cutters in flour before each use.',
+        'Bake on parchment on the middle rack 6–12 minutes, until lightly browned. Cool on a wire rack.',
+        'Make the icing: mix the confectioners’ sugar with the lemon juice, then add warm water a teaspoon at a time until smooth but still fairly opaque (add more sugar if too thin).',
+        'Brush the icing onto the cookies and add sprinkles before it sets. Let dry about 30 minutes.',
+      ],
+      note: 'From Viv. An easy rainy-day project — Ben would help Viv roll out the dough and cut shapes like bears and stars. Bon appétit!',
+    } },
+  },
+
   /* israeliSalad: {
     category: 'sides',
     contributor: 'Tubiana Family',
@@ -2900,7 +3113,7 @@ const ICONS = {
    ────────────────────────────────────────────────────────── */
 const CATS = ['appetizers','mains','desserts'];
 const ORDER = ['en','fr','de','es','ro','he','ar'];
-let lang = 'en', filter = 'all', query = '', currentId = null, searchScope = 'tab';
+let lang = 'en', filter = 'all', query = '', currentId = null;
 let kosherFilter = 'all';
 let pasFilter = false;
 let unitSystem = 'imperial';   // 'imperial' | 'metric'
@@ -2959,21 +3172,33 @@ function photoHTML(id, tall) {
   return `<div class="${cls}">${inner}</div>`;
 }
 
-function recipeText(id) {
+/* Relevance score for a search query. >0 means the recipe matches.
+   Title matches rank highest, then tag / contributor / description / ingredients / steps / notes. */
+function searchScore(id, q) {
   const c = content(id), r = recipes[id];
-  const noteText = Array.isArray(c.note) ? c.note.join(' ') : (c.note || '');
-  return [
-    c.title, c.desc, c.tag,
-    c.ingredients.map(i => i[0] + ' ' + i[1]).join(' '),
-    c.steps.join(' '),
-    noteText,
-    r.contributor || '',
-  ].join(' ').toLowerCase();
-}
-
-function matchSearch(id, q) {
-  if (!q) return true;
-  return recipeText(id).includes(q);
+  const title = (c.title || '').toLowerCase();
+  let s = 0;
+  if (title === q) s += 1000;
+  else if (title.indexOf(q) === 0) s += 700;
+  else {
+    const words = title.split(/\s+/);
+    if (words.indexOf(q) > -1) s += 600;
+    else if (words.some(w => w.indexOf(q) === 0)) s += 450;
+    else if (title.indexOf(q) > -1) s += 300;
+  }
+  const tag = (c.tag || '').toLowerCase();
+  const contributor = (r.contributor || '').toLowerCase();
+  const desc = (c.desc || '').toLowerCase();
+  const ing = c.ingredients.map(i => i[0] + ' ' + i[1]).join(' ').toLowerCase();
+  const steps = c.steps.join(' ').toLowerCase();
+  const note = (Array.isArray(c.note) ? c.note.join(' ') : (c.note || '')).toLowerCase();
+  if (tag.indexOf(q) > -1) s += 120;
+  if (contributor.indexOf(q) > -1) s += 90;
+  if (desc.indexOf(q) > -1) s += 50;
+  if (ing.indexOf(q) > -1) s += 30;
+  if (steps.indexOf(q) > -1) s += 12;
+  if (note.indexOf(q) > -1) s += 12;
+  return s;
 }
 
 function buildTabs() {
@@ -2990,13 +3215,6 @@ function buildLangOptions() {
   ).join('');
 }
 
-function buildScopeOptions() {
-  const u = ui();
-  const tabName = u.cats[filter] || u.scopeTab;
-  document.getElementById('scopeSelect').innerHTML =
-    `<option value="tab" ${searchScope==='tab'?'selected':''}>${esc(tabName)}</option>` +
-    `<option value="all" ${searchScope==='all'?'selected':''}>${esc(u.scopeAll)}</option>`;
-}
 
 function buildFilters() {
   const u = ui();
@@ -3040,15 +3258,35 @@ function card(id) {
 function render() {
   const u = ui(), main = document.getElementById('main');
   const q = query.trim().toLowerCase();
-  let html = '', anyShown = false;
+  let html = '';
 
-  const searchingAll = q && searchScope === 'all';
-  const filtering = q || kosherFilter !== 'all' || hidden.size > 0 || pasFilter;
+  /* Searching: always search ALL recipes (ignore the active tab), ranked by
+     relevance with title matches first. Kosher/allergen/Passover chips still apply. */
+  if (q) {
+    const ranked = Object.keys(recipes)
+      .map(id => ({ id, s: (passKosher(id) && passAllergens(id) && passPassover(id)) ? searchScore(id, q) : 0 }))
+      .filter(x => x.s > 0)
+      .sort((a, b) => b.s - a.s || content(a.id).title.localeCompare(content(b.id).title))
+      .map(x => x.id);
+    if (ranked.length) {
+      html = `<div class="recipe-section">
+        <div class="section-header"><h2>${esc(u.results)}</h2><span class="section-count">${ranked.length} ${esc(u.countWord)}</span></div>
+        <div class="recipe-grid">${ranked.map(card).join('')}</div>
+      </div>`;
+    } else {
+      html = `<div class="no-results">${esc(u.noResults)}</div>`;
+    }
+    main.innerHTML = html;
+    return;
+  }
 
+  /* Browsing: category sections, respecting the active tab + chips. */
+  const filtering = kosherFilter !== 'all' || hidden.size > 0 || pasFilter;
+  let anyShown = false;
   CATS.forEach(cat => {
-    if (!searchingAll && filter !== 'all' && filter !== cat) return;
+    if (filter !== 'all' && filter !== cat) return;
     const ids = Object.keys(recipes).filter(id =>
-      recipes[id].category === cat && passKosher(id) && passAllergens(id) && passPassover(id) && matchSearch(id, q));
+      recipes[id].category === cat && passKosher(id) && passAllergens(id) && passPassover(id));
     if (ids.length) {
       anyShown = true;
       html += `<div class="recipe-section">
@@ -3237,9 +3475,21 @@ function closeRecipe() {
 }
 function closeIfBg(e) { if (e.target === document.getElementById('overlay')) closeRecipe(); }
 
-function setFilter(cat) { filter = cat; buildTabs(); buildScopeOptions(); render(); }
-function onSearch(v) { query = v; render(); }
-function onScope(v) { searchScope = v; render(); }
+function setFilter(cat) { filter = cat; buildTabs(); render(); }
+function onSearch(v) {
+  query = v;
+  const btn = document.getElementById('searchClear');
+  if (btn) btn.hidden = !v;
+  render();
+}
+function clearSearch() {
+  query = '';
+  const inp = document.getElementById('search');
+  if (inp) { inp.value = ''; inp.focus(); }
+  const btn = document.getElementById('searchClear');
+  if (btn) btn.hidden = true;
+  render();
+}
 
 function setLang(code) {
   lang = code;
@@ -3256,7 +3506,6 @@ function setLang(code) {
   document.getElementById('search').placeholder = u.search;
   buildTabs();
   buildLangOptions();
-  buildScopeOptions();
   buildFilters();
   render();
   if (currentId) openRecipe(currentId);
