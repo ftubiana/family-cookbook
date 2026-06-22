@@ -149,6 +149,19 @@
   .print-btn { background: var(--terracotta); color: #fff; border: none; border-radius: 10px; padding: 0.65rem 1.3rem; font-family: 'Inter', sans-serif; font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, transform 0.15s; }
   .print-btn:hover { background: var(--terracotta-dark); transform: translateY(-1px); }
 
+  /* ── RECIPE CONTROLS (servings + units) ── */
+  .recipe-controls { display: flex; flex-wrap: wrap; gap: 0.9rem 2rem; align-items: center; padding: 1.25rem 1.75rem 0; }
+  .rc-group { display: flex; align-items: center; gap: 0.6rem; }
+  .rc-label { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .stepper { display: inline-flex; align-items: center; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; background: var(--white); }
+  .stepper button { width: 2rem; height: 2rem; border: none; background: none; color: var(--ink); font-size: 1.15rem; line-height: 1; cursor: pointer; transition: background 0.15s; }
+  .stepper button:hover { background: var(--sand); }
+  .stepper span { min-width: 2.1rem; text-align: center; font-size: 0.9rem; color: var(--ink); font-weight: 500; }
+  .unit-toggle { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+  .unit-toggle button { border: none; background: var(--white); color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.74rem; letter-spacing: 0.03em; padding: 0.42rem 0.9rem; cursor: pointer; transition: background 0.15s, color 0.15s; }
+  .unit-toggle button:hover { color: var(--ink); }
+  .unit-toggle button.active { background: var(--ink); color: var(--cream); }
+
   /* ── EMPTY / NO RESULTS ── */
   .empty-section, .no-results { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 0.88rem; border: 1.5px dashed var(--border); border-radius: 16px; margin-bottom: 3.5rem; }
   .empty-section p:first-child { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--ink); margin-bottom: 0.4rem; }
@@ -221,6 +234,7 @@
     .modal-badges { padding: 0.75rem 1rem 0; }
     .modal-divider { margin: 1rem; }
     .modal-meta { padding: 0 1rem; }
+    .recipe-controls { padding: 1.1rem 1rem 0; gap: 0.8rem 1.5rem; }
     .modal-section { padding: 1rem 1rem 0; }
     .modal-note { margin: 1rem 1rem 0; }
     /* Extra bottom padding clears iOS home-bar */
@@ -252,10 +266,12 @@
   }
 
   @media print {
-    header, nav, footer, main { display: none !important; }
-    .overlay { position: static !important; display: block !important; background: none !important; padding: 0 !important; overflow: visible !important; }
-    .modal { box-shadow: none !important; max-width: 100% !important; border: none !important; }
-    .modal-close, .modal-actions { display: none !important; }
+    /* Print ONLY the open recipe — hide the entire page behind the popup */
+    body > *:not(.overlay) { display: none !important; }
+    .overlay { display: none !important; }
+    .overlay.open { position: static !important; display: block !important; background: none !important; padding: 0 !important; overflow: visible !important; }
+    .overlay.open .modal { box-shadow: none !important; max-width: 100% !important; max-height: none !important; border: none !important; border-radius: 0 !important; animation: none !important; }
+    .modal-close, .modal-actions, .recipe-controls { display: none !important; }
   }
 </style>
 </head>
@@ -273,7 +289,9 @@
     <div class="nav-controls">
       <input id="search" class="search" type="search" oninput="onSearch(this.value)" aria-label="Search">
       <select id="scopeSelect" class="scope-select" onchange="onScope(this.value)" aria-label="Search scope"></select>
+      <!-- Language selector hidden for now — uncomment to restore multi-language switching
       <select id="langSelect" class="lang-select" onchange="setLang(this.value)" aria-label="Language"></select>
+      -->
     </div>
   </div>
 </nav>
@@ -282,9 +300,12 @@
 
 <main id="main"></main>
 
+<!-- Submit a Recipe button hidden for now — uncomment to restore
 <section class="submit-cta">
   <a class="submit-cta-btn" id="submitCtaBtn" href="https://forms.gle/A78oK4t3BgbkS1rC7" target="_blank" rel="noopener noreferrer">Submit a Recipe</a>
 </section>
+-->
+
 
 <footer id="footer"></footer>
 
@@ -305,6 +326,7 @@ const I18N = {
     cats:{ all:'All', appetizers:'Appetizers', mains:'Mains', sides:'Sides', desserts:'Desserts' },
     ingredients:'Ingredients', method:'Method', timeLabel:'Time', servesLabel:'Serves',
     contributedBy:'Recipe from', print:'Print recipe', countWord:'recipes', scopeTab:'This tab', scopeAll:'All recipes',
+    units:'Units', unitMetric:'Metric', unitImperial:'Imperial',
     emptyTitle:'Nothing here yet', emptyBody:'Recipes will be added to this section soon.',
     noResults:'No recipes match your search.',
     translationSoon:'This recipe hasn’t been translated yet — showing it in English.',
@@ -315,6 +337,7 @@ const I18N = {
     cats:{ all:'Tout', appetizers:'Entrées', mains:'Plats', sides:'Accompagnements', desserts:'Desserts' },
     ingredients:'Ingrédients', method:'Préparation', timeLabel:'Temps', servesLabel:'Pour',
     contributedBy:'Recette de', print:'Imprimer la recette', countWord:'recettes', scopeTab:'Cet onglet', scopeAll:'Toutes les recettes',
+    units:'Unités', unitMetric:'Métrique', unitImperial:'Impérial',
     emptyTitle:'Rien ici pour l’instant', emptyBody:'Des recettes seront bientôt ajoutées à cette section.',
     noResults:'Aucune recette ne correspond à votre recherche.',
     translationSoon:'Cette recette n’a pas encore été traduite — affichée en anglais.',
@@ -325,6 +348,7 @@ const I18N = {
     cats:{ all:'Alle', appetizers:'Vorspeisen', mains:'Hauptgerichte', sides:'Beilagen', desserts:'Desserts' },
     ingredients:'Zutaten', method:'Zubereitung', timeLabel:'Zeit', servesLabel:'Für',
     contributedBy:'Rezept von', print:'Rezept drucken', countWord:'Rezepte', scopeTab:'Dieser Tab', scopeAll:'Alle Rezepte',
+    units:'Einheiten', unitMetric:'Metrisch', unitImperial:'Imperial',
     emptyTitle:'Noch nichts hier', emptyBody:'Rezepte werden bald zu diesem Bereich hinzugefügt.',
     noResults:'Keine Rezepte gefunden.',
     translationSoon:'Dieses Rezept ist noch nicht übersetzt — Anzeige auf Englisch.',
@@ -335,6 +359,7 @@ const I18N = {
     cats:{ all:'Todo', appetizers:'Entrantes', mains:'Platos principales', sides:'Guarniciones', desserts:'Postres' },
     ingredients:'Ingredientes', method:'Preparación', timeLabel:'Tiempo', servesLabel:'Para',
     contributedBy:'Receta de', print:'Imprimir receta', countWord:'recetas', scopeTab:'Esta pestaña', scopeAll:'Todas las recetas',
+    units:'Unidades', unitMetric:'Métrico', unitImperial:'Imperial',
     emptyTitle:'Nada aquí todavía', emptyBody:'Pronto se añadirán recetas a esta sección.',
     noResults:'No hay recetas que coincidan con tu búsqueda.',
     translationSoon:'Esta receta aún no se ha traducido — se muestra en inglés.',
@@ -345,6 +370,7 @@ const I18N = {
     cats:{ all:'Toate', appetizers:'Aperitive', mains:'Feluri principale', sides:'Garnituri', desserts:'Deserturi' },
     ingredients:'Ingrediente', method:'Mod de preparare', timeLabel:'Timp', servesLabel:'Porții',
     contributedBy:'Rețetă de la', print:'Printează rețeta', countWord:'rețete', scopeTab:'Această filă', scopeAll:'Toate rețetele',
+    units:'Unități', unitMetric:'Metric', unitImperial:'Imperial',
     emptyTitle:'Nimic aici încă', emptyBody:'În curând vor fi adăugate rețete în această secțiune.',
     noResults:'Nicio rețetă nu corespunde căutării.',
     translationSoon:'Această rețetă nu a fost încă tradusă — afișată în engleză.',
@@ -355,6 +381,7 @@ const I18N = {
     cats:{ all:'הכול', appetizers:'מנות פתיחה', mains:'מנות עיקריות', sides:'תוספות', desserts:'קינוחים' },
     ingredients:'מרכיבים', method:'אופן ההכנה', timeLabel:'זמן', servesLabel:'מספר מנות',
     contributedBy:'מתכון של', print:'הדפסת המתכון', countWord:'מתכונים', scopeTab:'בלשונית זו', scopeAll:'כל המתכונים',
+    units:'יחידות', unitMetric:'מטרי', unitImperial:'אימפריאלי',
     emptyTitle:'עדיין אין כאן כלום', emptyBody:'מתכונים יתווספו לקטע הזה בקרוב.',
     noResults:'לא נמצאו מתכונים מתאימים.',
     translationSoon:'המתכון הזה עדיין לא תורגם — מוצג באנגלית.',
@@ -365,6 +392,7 @@ const I18N = {
     cats:{ all:'الكل', appetizers:'المقبلات', mains:'الأطباق الرئيسية', sides:'الأطباق الجانبية', desserts:'الحلويات' },
     ingredients:'المكوّنات', method:'طريقة التحضير', timeLabel:'الوقت', servesLabel:'يكفي لـ',
     contributedBy:'وصفة من', print:'طباعة الوصفة', countWord:'وصفات', scopeTab:'هذه التبويبة', scopeAll:'كل الوصفات',
+    units:'الوحدات', unitMetric:'متري', unitImperial:'إمبراطوري',
     emptyTitle:'لا يوجد شيء هنا بعد', emptyBody:'ستتم إضافة وصفات إلى هذا القسم قريبًا.',
     noResults:'لا توجد وصفات تطابق بحثك.',
     translationSoon:'لم تتم ترجمة هذه الوصفة بعد — تظهر بالإنجليزية.',
@@ -2482,6 +2510,16 @@ const recipes = {
 };
 
 /* ──────────────────────────────────────────────────────────
+   RECIPE TRANSLATIONS
+   - English lives in `recipes` above. Other languages live here,
+     keyed by recipe id, and are merged into recipes[id].t at load.
+   ────────────────────────────────────────────────────────── */
+const TRANSLATIONS = {
+/*__T_END__*/
+};
+Object.keys(TRANSLATIONS).forEach(function(id){ if (recipes[id]) Object.assign(recipes[id].t, TRANSLATIONS[id]); });
+
+/* ──────────────────────────────────────────────────────────
    KOSHER CATEGORIES & ALLERGENS
    - Each recipe has one kosher category (meat | dairy | parve)
      and a list of allergens it CONTAINS.
@@ -2532,6 +2570,8 @@ const ORDER = ['en','fr','de','es','ro','he','ar'];
 let lang = 'en', filter = 'all', query = '', currentId = null, searchScope = 'tab';
 let kosherFilter = 'all';
 let pasFilter = false;
+let unitSystem = 'imperial';   // 'imperial' | 'metric'
+let modalServings = 0;         // current (scalable) servings for the open recipe
 const hidden = new Set();
 
 function ui() { return I18N[lang]; }
@@ -2610,7 +2650,9 @@ function buildTabs() {
 }
 
 function buildLangOptions() {
-  document.getElementById('langSelect').innerHTML = ORDER.map(code =>
+  const el = document.getElementById('langSelect');
+  if (!el) return;   // language selector may be commented out
+  el.innerHTML = ORDER.map(code =>
     `<option value="${code}" ${code===lang?'selected':''}>${esc(I18N[code].langName)}</option>`
   ).join('');
 }
@@ -2692,18 +2734,147 @@ function render() {
   main.innerHTML = html;
 }
 
+/* ──────────────────────────────────────────────────────────
+   UNIT CONVERSION + SERVINGS SCALING
+   - transformQty scales the leading amount by `factor` and, where a
+     recognised unit is present, converts it to the chosen system.
+   - Amounts with no number (e.g. "to taste", "a glug") and counts
+     (e.g. "15 cloves") are left as-is; only the number is scaled.
+   ────────────────────────────────────────────────────────── */
+const UNI_FRAC = {'¼':0.25,'½':0.5,'¾':0.75,'⅓':1/3,'⅔':2/3,'⅛':0.125,'⅜':0.375,'⅝':0.625,'⅞':0.875,'⅕':0.2,'⅖':0.4,'⅗':0.6,'⅘':0.8,'⅙':1/6,'⅚':5/6};
+const UNI_RE = '¼½¾⅓⅔⅛⅜⅝⅞⅕⅖⅗⅘⅙⅚';
+const UNIT_KIND = {
+  cup:'cup', cups:'cup',
+  tbsp:'tbsp', tablespoon:'tbsp', tablespoons:'tbsp',
+  tsp:'tsp', teaspoon:'tsp', teaspoons:'tsp',
+  lb:'lb', lbs:'lb', pound:'lb', pounds:'lb',
+  oz:'oz', ounce:'oz', ounces:'oz',
+  g:'g', gram:'g', grams:'g',
+  kg:'kg', kilogram:'kg', kilograms:'kg',
+  ml:'ml', l:'l', liter:'l', litre:'l', liters:'l', litres:'l',
+  inch:'inch', inches:'inch',
+};
+const FRAC_STEPS = [[0,''],[0.125,'⅛'],[0.25,'¼'],[1/3,'⅓'],[0.5,'½'],[2/3,'⅔'],[0.75,'¾'],[0.875,'⅞'],[1,'']];
+
+function parseNum(s) {
+  let m = s.match(new RegExp('^(\\d+)?\\s*([' + UNI_RE + '])'));
+  if (m) { const ip = m[1] ? parseInt(m[1],10) : 0; return { val: ip + UNI_FRAC[m[2]], len: m[0].length }; }
+  m = s.match(/^(\d+)\s+(\d+)\/(\d+)/);
+  if (m) return { val: parseInt(m[1],10) + parseInt(m[2],10)/parseInt(m[3],10), len: m[0].length };
+  m = s.match(/^(\d+)\/(\d+)/);
+  if (m) return { val: parseInt(m[1],10)/parseInt(m[2],10), len: m[0].length };
+  m = s.match(/^(\d+(?:\.\d+)?)/);
+  if (m) return { val: parseFloat(m[1]), len: m[0].length };
+  return null;
+}
+function fmtFrac(v) {
+  if (!isFinite(v)) return '';
+  if (v < 0) v = 0;
+  let whole = Math.floor(v + 1e-9), frac = v - whole, best = 0, bd = 9;
+  for (const [f] of FRAC_STEPS) { const d = Math.abs(frac - f); if (d < bd) { bd = d; best = f; } }
+  let glyph = ''; for (const [f,g] of FRAC_STEPS) { if (f === best) glyph = g; }
+  if (best === 1) { whole += 1; glyph = ''; }
+  if (whole === 0 && glyph === '') return (frac > 0 && frac < 0.0625) ? (Math.round(v*100)/100 + '') : '0';
+  if (whole === 0) return glyph;
+  return whole + glyph;
+}
+function fmtDec(v) { const r = Math.round(v*100)/100; return (Math.round(r) === r) ? String(Math.round(r)) : String(r); }
+function fmtDec1(v) { const r = Math.round(v*10)/10; return (Math.round(r) === r) ? String(Math.round(r)) : String(r); }
+function roundTo(v, step) { return Math.round(v/step) * step; }
+
+function convertVals(vals, kind, system) {
+  const keep = () => ({ nums: vals.map(fmtFrac), unit: null });
+  if (system === 'metric') {
+    if (kind === 'cup') { const ml = vals.map(v => v*240), big = Math.max.apply(null, ml) >= 1000;
+      return { nums: ml.map(x => big ? fmtDec(x/1000) : String(roundTo(x, x < 100 ? 5 : 10))), unit: big ? 'l' : 'ml' }; }
+    if (kind === 'lb' || kind === 'oz') { const g = vals.map(v => v * (kind === 'lb' ? 453.592 : 28.3495)), big = Math.max.apply(null, g) >= 1000;
+      return { nums: g.map(x => big ? fmtDec1(x/1000) : String(roundTo(x, 5))), unit: big ? 'kg' : 'g' }; }
+    if (kind === 'inch') return { nums: vals.map(v => fmtDec(roundTo(v*2.54, 0.5))), unit: 'cm' };
+    return keep();
+  } else {
+    if (kind === 'g' || kind === 'kg') { const g = vals.map(v => v * (kind === 'kg' ? 1000 : 1)), oz = g.map(x => x/28.3495), big = Math.max.apply(null, oz) >= 16;
+      return big ? { nums: oz.map(x => fmtDec1(x/16)), unit: 'lb' } : { nums: oz.map(x => fmtFrac(roundTo(x, 0.25))), unit: 'oz' }; }
+    if (kind === 'ml' || kind === 'l') { const ml = vals.map(v => v * (kind === 'l' ? 1000 : 1)), small = Math.max.apply(null, ml) < 120;
+      return small ? { nums: ml.map(x => fmtFrac(roundTo(x/15, 0.25))), unit: 'tbsp' }
+                   : { nums: ml.map(x => fmtFrac(roundTo(x/240, 0.25))), unit: (Math.max.apply(null, ml)/240 > 1 ? 'cups' : 'cup') }; }
+    if (kind === 'cm') return { nums: vals.map(v => fmtFrac(roundTo(v/2.54, 0.25))), unit: 'inch' };
+    return keep();
+  }
+}
+function transformQty(qty, factor, system) {
+  if (!qty) return qty;
+  const s = String(qty);
+  const first = parseNum(s);
+  if (!first) return s;
+  let vals = [first.val], rest = s.slice(first.len), isRange = false;
+  const rm = rest.match(/^\s*[–-]\s*/);
+  if (rm) { const sec = parseNum(rest.slice(rm[0].length)); if (sec) { vals.push(sec.val); rest = rest.slice(rm[0].length + sec.len); isRange = true; } }
+  let kind = null, origUnit = '', after = rest;
+  const um = rest.match(/^\s*([A-Za-z]+)\.?/);
+  if (um && UNIT_KIND[um[1].toLowerCase()]) { kind = UNIT_KIND[um[1].toLowerCase()]; origUnit = um[1]; after = rest.slice(um[0].length); }
+  vals = vals.map(v => v * factor);
+  if (kind) {
+    const res = convertVals(vals, kind, system);
+    let unit = res.unit !== null ? res.unit : origUnit;
+    if (res.unit === null && kind === 'cup' && (vals.length > 1 || vals[0] > 1) && /^cup$/i.test(origUnit)) unit = origUnit + 's';
+    const tail = after.trim() ? ' ' + after.trim() : '';
+    return res.nums.join('–') + ' ' + unit + tail;
+  }
+  return vals.map(fmtFrac).join('–') + after;
+}
+function convertTemps(text) {
+  if (unitSystem !== 'metric') return text;
+  return text.replace(/(\d+)(?:\s*[–-]\s*(\d+))?\s*[°˚]?\s*F\b/g, function (m, a, b) {
+    const f2c = f => Math.round(((+f - 32) * 5/9) / 5) * 5;
+    return b ? (f2c(a) + '–' + f2c(b) + '°C') : (f2c(a) + '°C');
+  });
+}
+
+function ingredientsHTML(id) {
+  const c = content(id), r = recipes[id], f = r.serves ? (modalServings / r.serves) : 1;
+  return c.ingredients.map(([qty,name]) =>
+    `<li><span style="color:var(--ink)">${esc(name)}</span><span>${esc(transformQty(qty, f, unitSystem))}</span></li>`).join('');
+}
+function controlsHTML() {
+  const u = ui();
+  return `<div class="recipe-controls">
+    <div class="rc-group"><span class="rc-label">${esc(u.servesLabel)}</span>
+      <div class="stepper"><button onclick="stepServings(-1)" aria-label="−">−</button><span id="servesVal">${esc(modalServings)}</span><button onclick="stepServings(1)" aria-label="+">+</button></div>
+    </div>
+    <div class="rc-group"><span class="rc-label">${esc(u.units)}</span>
+      <div class="unit-toggle"><button id="unitImp" class="${unitSystem==='imperial'?'active':''}" onclick="setUnits('imperial')">${esc(u.unitImperial)}</button><button id="unitMet" class="${unitSystem==='metric'?'active':''}" onclick="setUnits('metric')">${esc(u.unitMetric)}</button></div>
+    </div>
+  </div>`;
+}
+function stepServings(d) {
+  modalServings = Math.max(1, modalServings + d);
+  const sv = document.getElementById('servesVal'); if (sv) sv.textContent = modalServings;
+  const il = document.getElementById('ingList'); if (il) il.innerHTML = ingredientsHTML(currentId);
+}
+function setUnits(sys) {
+  unitSystem = sys;
+  try { localStorage.setItem('tfr-units', sys); } catch (e) {}
+  if (currentId) paintRecipe(currentId);
+}
+
 function openRecipe(id) {
   currentId = id;
+  modalServings = recipes[id].serves || 1;
+  paintRecipe(id);
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function paintRecipe(id) {
   const c = content(id), r = recipes[id], u = ui();
   const by = r.contributor ? `<p class="modal-by">${esc(u.contributedBy)} ${esc(r.contributor)}</p>` : '';
   const fallback = !hasTranslation(id) ? `<div class="modal-note modal-note-info">${esc(u.translationSoon)}</div>` : '';
-  const ingredients = c.ingredients.map(([qty,name]) => `<li><span style="color:var(--ink)">${esc(name)}</span><span>${esc(qty)}</span></li>`).join('');
-  const steps = c.steps.map(s => `<li>${esc(s)}</li>`).join('');
+  const steps = c.steps.map(s => `<li>${esc(convertTemps(s))}</li>`).join('');
   let note = '';
   if (Array.isArray(c.note)) {
-    note = `<div class="modal-note"><ul class="note-list">${c.note.map(n => `<li>${esc(n)}</li>`).join('')}</ul></div>`;
+    note = `<div class="modal-note"><ul class="note-list">${c.note.map(n => `<li>${esc(convertTemps(n))}</li>`).join('')}</ul></div>`;
   } else if (c.note) {
-    note = `<div class="modal-note">${esc(c.note)}</div>`;
+    note = `<div class="modal-note">${esc(convertTemps(c.note))}</div>`;
   }
 
   document.getElementById('modal-content').innerHTML = `
@@ -2716,16 +2887,14 @@ function openRecipe(id) {
     <div class="modal-divider"></div>
     <div class="modal-meta">
       <div class="modal-meta-item"><span class="modal-meta-label">${esc(u.timeLabel)}</span><span class="modal-meta-value">${esc(c.time)}</span></div>
-      <div class="modal-meta-item"><span class="modal-meta-label">${esc(u.servesLabel)}</span><span class="modal-meta-value">${esc(r.serves)}</span></div>
     </div>
     <div class="modal-badges">${badgesHTML(id)}</div>
-    <div class="modal-section"><h4>${esc(u.ingredients)}</h4><ul class="ingredients-list">${ingredients}</ul></div>
+    ${controlsHTML()}
+    <div class="modal-section"><h4>${esc(u.ingredients)}</h4><ul class="ingredients-list" id="ingList">${ingredientsHTML(id)}</ul></div>
     <div class="modal-section"><h4>${esc(u.method)}</h4><ol class="steps-list">${steps}</ol></div>
     ${note}
     <div class="modal-actions"><button class="print-btn" onclick="window.print()">${esc(u.print)}</button></div>
   `;
-  document.getElementById('overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
 }
 
 function closeRecipe() {
@@ -2749,7 +2918,8 @@ function setLang(code) {
   document.getElementById('brandEm').textContent = u.brandEm;
   document.getElementById('sub').textContent = u.sub;
   document.getElementById('footer').textContent = u.footer;
-  document.getElementById('submitCtaBtn').textContent = u.submitBtn;
+  const submitBtn = document.getElementById('submitCtaBtn');
+  if (submitBtn) submitBtn.textContent = u.submitBtn;   // submit CTA may be commented out
   document.getElementById('search').placeholder = u.search;
   buildTabs();
   buildLangOptions();
@@ -2762,6 +2932,7 @@ function setLang(code) {
 (function init() {
   let start = '';
   try { start = localStorage.getItem('tfr-lang') || ''; } catch (e) {}
+  try { const us = localStorage.getItem('tfr-units'); if (us === 'metric' || us === 'imperial') unitSystem = us; } catch (e) {}
   if (!I18N[start]) {
     const navLang = (navigator.language || 'en').slice(0,2);
     start = I18N[navLang] ? navLang : 'en';
